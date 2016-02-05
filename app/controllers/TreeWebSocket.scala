@@ -1,18 +1,14 @@
 package controllers
 
-import play.api._
-import play.api.mvc._
 import com.sksamuel.elastic4s.{RichGetResponse, ElasticClient}
-import com.sksamuel.elastic4s.ElasticDsl._
-import scala.concurrent.Future
-import play.api.libs.iteratee.Iteratee
-import play.api.libs.json.{JsNull,Json,JsString,JsValue,JsResult}
-import play.api.libs.json.Json
-import play.api.libs.json.JsSuccess
-import play.api.libs.json.JsError
-import play.api.libs.iteratee.Concurrent
+import play.api._
 import play.api.libs.iteratee.Concurrent.Channel
+import play.api.libs.iteratee.{Concurrent, Iteratee}
+import play.api.libs.json.{JsError, JsSuccess, JsValue, Json}
+import play.api.mvc._
+import com.sksamuel.elastic4s.ElasticDsl._;
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 
 class TreeWebSocket extends Controller {
