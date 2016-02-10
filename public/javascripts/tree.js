@@ -1,4 +1,9 @@
 // Get JSON data
+ws = new WebSocket(ws://localhost:9000/treesocket");
+
+
+
+
 treeJSON = d3.json("treedata.json", function(error, treeData) {
 
     // Calculate total nodes, max label length

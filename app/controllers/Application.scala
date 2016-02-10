@@ -19,15 +19,13 @@ class Application extends Controller {
     Ok(views.html.tree())
   }
 
-  def treedata = Action {
+  def treedata = Action.async {
 
     val client = ElasticClient.transport("elasticsearch://localhost:9300")
 
     val response : Future[RichGetResponse] =	client.execute { get("root").from("ck")	}
-    response.foreach(f => f.field("name"))
+    response.map(f => Ok(f.field("name")))
 
-    val responseString = response.map { f => f.sourceAsString }
-    Ok(responseString.await)
 
   }
 }
