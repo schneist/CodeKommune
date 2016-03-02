@@ -22,11 +22,11 @@ routesGenerator := InjectedRoutesGenerator
 
 libraryDependencies += "org.elasticsearch" % "elasticsearch" % "2.2.0"
 
-libraryDependencies += "com.sksamuel.elastic4s" % "elastic4s-core_2.10" % "2.2.0"
+libraryDependencies += "com.sksamuel.elastic4s" %% "elastic4s-core" % "2.1.2"
 
-libraryDependencies += "com.sksamuel.elastic4s" % "elastic4s-testkit_2.10" % "2.2.0"
+libraryDependencies += "com.sksamuel.elastic4s" %% "elastic4s-testkit" % "2.1.2"
 
-libraryDependencies += "org.scalatest" % "scalatest_2.10" % "3.0.0-M15"
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.0-M15"
 
 
 fork in run := false
