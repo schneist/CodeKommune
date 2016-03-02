@@ -20,13 +20,13 @@ resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
 routesGenerator := InjectedRoutesGenerator
 
 
-libraryDependencies += "org.elasticsearch" % "elasticsearch" % "2.2.0"
+libraryDependencies += "org.elasticsearch" % "elasticsearch" % "2.1.2"
 
 libraryDependencies += "com.sksamuel.elastic4s" %% "elastic4s-core" % "2.1.2"
 
 libraryDependencies += "com.sksamuel.elastic4s" %% "elastic4s-testkit" % "2.1.2"
 
-libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.0-M15"
+libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.6"
 
 
 fork in run := false
