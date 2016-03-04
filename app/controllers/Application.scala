@@ -1,7 +1,9 @@
 package controllers
 
+
 import com.sksamuel.elastic4s.ElasticDsl._
-import com.sksamuel.elastic4s.{RichSearchResponse, RichGetResponse, ElasticClient}
+import com.sksamuel.elastic4s.{RichSearchResponse, ElasticClient}
+import domain._
 import play.api.mvc._
 
 import play.api.libs.json._
@@ -20,9 +22,9 @@ import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
 
-class Application extends Controller {
+class Application   extends Controller {
 
-  val client = ElasticClient.transport("elasticsearch://localhost:9300")
+  val taskService = ElasticClient.transport("elasticsearch://localhost:9300")
 
   def index = Action {
     Ok(views.html.index("Your new application is ready."))
@@ -62,9 +64,9 @@ class Application extends Controller {
     }
   }
 
-  case class Task(id: String, parent: String, name: String)
+
   case class TaskList(name:String,tasks : Seq[Task])
-  case class TaskTree(name:String, children: Seq[TaskTree])
+
 
 
   implicit val taskReads: Reads[Task] = (
