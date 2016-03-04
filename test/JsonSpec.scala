@@ -4,6 +4,7 @@ import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.analyzers.KeywordAnalyzer
 import com.sksamuel.elastic4s.mappings.FieldType.StringType
 import com.sksamuel.elastic4s.testkit.{SearchMatchers, ElasticSugar}
+import com.sun.jmx.snmp.tasks.TaskServer
 import org.scalatest.{FreeSpec, Matchers}
 import com.sksamuel.elastic4s.ElasticDsl._
 import org.scalatest.WordSpec
@@ -13,7 +14,9 @@ import play.api.test.FakeRequest
 
 import play.api.test._
 import play.api.test.Helpers._
+import repositories.TaskRepositoryElastic
 
+import services.TaskServiceElasticComponent
 
 
 class JsonSpec extends WordSpec with Matchers with SearchMatchers with ElasticSugar with MockitoSugar {
@@ -46,15 +49,29 @@ class JsonSpec extends WordSpec with Matchers with SearchMatchers with ElasticSu
       (search in "tasks" query "*") should haveHits(4)
     }
   }
-  "findall" should{
-    "find all " in new WithApplication{
-      val treedata = route(FakeRequest(GET, "/treedata.json")).get
-      status(treedata)  shouldBe  Ok
-      //contentType(treedata) must beSome.which(_ == "text/html")
-      //contentAsString(treedata) must contain ("Your new application is ready.")
+
+  "task repo " should {
+    "find all children" in {
+      object TaskServiceObj {
+        val taskServiceComponent = new TaskServiceElasticComponent with TaskRepositoryElastic {
+          val esClient = client
+        }
+      }
+      TaskServiceObj.taskServiceComponent.childTaskFinder.getChildren("hank").size shouldBe(2)
+      System.out.println(TaskServiceObj.taskServiceComponent.childTaskFinder.getChildren("hank"))
+
     }
 
   }
+  //"findall" should{
+  //"find all " in new WithApplication{
+  //val treedata = route(FakeRequest(GET, "/treedata.json")).get
+  //status(treedata)  shouldBe  Ok
+  //contentType(treedata) must beSome.which(_ == "text/html")
+  //contentAsString(treedata) must contain ("Your new application is ready.")
+  // }
+
+  //}
 
 
 

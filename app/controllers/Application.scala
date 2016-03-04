@@ -31,7 +31,7 @@ class Application   extends Controller {
   }
 
   def tree = Action {
-    Ok(views.html.tree())
+    Ok(views.html.tree().toString())
   }
 
   def treedata = Action.async {
@@ -42,19 +42,12 @@ class Application   extends Controller {
     treeFuture.map( t => Ok(Json.toJson(t)))
   }
 
-  @tailrec
   private def iterate(tree : TaskTree): TaskTree ={
 
     val parents : Seq[String] = getLeaves(tree,Seq.empty);
-    val response: RichSearchResponse = client.execute {
-      search in "ck"->"task" query { termsQuery("parent", parents.mkString(",")) }
-    }.await
-
-    val resJson: JsValue  = Json.parse(response.original.toString)
-    val d = resJson \ "hits" \"hits"
-    val taskList: TaskList = d.validate[TaskList].get
-    val trees : Seq[TaskTree] = taskList.tasks.map(t => new TaskTree(t.name, Seq.empty))
-    iterate(new TaskTree(tree.name, tree.children ++ trees))
+//    parents.map(p -> )
+  //  iterate(new TaskTree(tree.name, tree.children ++ trees))
+    return new TaskTree("",Seq.empty)
   }
 
   private def getLeaves(tree: TaskTree,leaves : Seq[String]): Seq[String] ={
@@ -64,26 +57,12 @@ class Application   extends Controller {
     }
   }
 
-
-  case class TaskList(name:String,tasks : Seq[Task])
-
-
-
-  implicit val taskReads: Reads[Task] = (
-    (JsPath \ "_id").read[String] and
-      (JsPath \ "_source" \ "parent").read[String] and
-      (JsPath \ "_source" \ "name").read[String]
-    ) (Task.apply _)
-
   implicit lazy val treeWrites: Writes[TaskTree] = (
     (JsPath\ "name").write[String] and
       (JsPath \ "children").lazyWrite(Writes.seq[TaskTree](treeWrites))
     )(unlift(TaskTree.unapply))
 
-  implicit val taskListReads: Reads[TaskList] = (
-    Reads.pure("name") and
-      (JsPath \ "_id").read[Seq[Task]]
-    ) (TaskList.apply _)
+
 
 
 }

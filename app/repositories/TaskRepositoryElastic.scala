@@ -11,14 +11,14 @@ import play.api.libs.json._
   */
 trait TaskRepositoryElastic  extends TaskRepositoryComponent{
 
-  val client: ElasticClient
+  val esClient: ElasticClient
 
-  def   childTaskFinder  = new ChildTaskFinderElastic(client)
+  def   childTaskFinder  = new ChildTaskFinderElastic(esClient)
 
-  class ChildTaskFinderElastic(client: ElasticClient) extends ChildTaskFinder {
+  class ChildTaskFinderElastic(esClient: ElasticClient) extends ChildTaskFinder {
     def getChildren(parent: String): Seq[Task] = {
-      val response: RichSearchResponse = client.execute {
-        search in "ck" -> "task" query {
+      val response: RichSearchResponse = esClient.execute {
+        search in "tasks" -> "task" query {
           termsQuery("parent", parent)
         }
       }.await

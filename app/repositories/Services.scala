@@ -7,9 +7,8 @@ import services.TaskServiceComponent
   */
 object Services {
 
-  val taskSeriveComponent = new TaskServiceComponent with TaskRepositoryElastic{
+  //val taskSeriveComponent = new TaskServiceComponent with TaskRepositoryElastic{
 
 
-  }
 
 }
