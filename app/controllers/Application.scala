@@ -7,6 +7,7 @@ import domain._
 import play.api.mvc._
 
 import play.api.libs.json._
+import repositories.Services
 
 import scala.annotation.tailrec
 
@@ -24,7 +25,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 class Application   extends Controller {
 
-  val taskService = ElasticClient.transport("elasticsearch://localhost:9300")
+  val taskService = Services.TaskServiceObj.taskServiceComponent
 
   def index = Action {
     Ok(views.html.index("Your new application is ready."))
@@ -45,8 +46,8 @@ class Application   extends Controller {
   private def iterate(tree : TaskTree): TaskTree ={
 
     val parents : Seq[String] = getLeaves(tree,Seq.empty);
-//    parents.map(p -> )
-  //  iterate(new TaskTree(tree.name, tree.children ++ trees))
+    parents.map(p => taskService.childTaskFinder.getChildren(p))
+
     return new TaskTree("",Seq.empty)
   }
 

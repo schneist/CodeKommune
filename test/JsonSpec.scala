@@ -58,7 +58,6 @@ class JsonSpec extends WordSpec with Matchers with SearchMatchers with ElasticSu
         }
       }
       TaskServiceObj.taskServiceComponent.childTaskFinder.getChildren("hank").size shouldBe(2)
-      System.out.println(TaskServiceObj.taskServiceComponent.childTaskFinder.getChildren("hank"))
 
     }
 
