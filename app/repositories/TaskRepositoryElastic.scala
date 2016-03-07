@@ -23,13 +23,14 @@ trait TaskRepositoryElastic  extends TaskRepositoryComponent{
         }
       }.await
       val resJson: JsValue = Json.parse(response.original.toString)
-      val d = resJson \ "hits" \ "hits"
-      d.validate[TaskList].get.tasks
+      val d = resJson \ "hits"
+      val validated = d.validate[TaskList]
+      validated.get.tasks
     }
   }
 
 
-  case class TaskList(name:String,tasks : Seq[Task])
+  case class TaskList(total:Int,tasks : Seq[Task])
 
 
 
@@ -41,7 +42,7 @@ trait TaskRepositoryElastic  extends TaskRepositoryComponent{
 
 
   implicit val taskListReads: Reads[TaskList] = (
-    Reads.pure("name") and
-      (JsPath \ "_id").read[Seq[Task]]
+      (JsPath \ "total").read[Int] and
+      (JsPath \ "hits" ).read[Seq[Task]]
     ) (TaskList.apply _)
 }
