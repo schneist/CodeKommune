@@ -58,10 +58,7 @@ class Application   extends Controller {
     }
   }
 
-  implicit lazy val treeWrites: Writes[TaskTree] = (
-    (JsPath\ "name").write[String] and
-      (JsPath \ "children").lazyWrite(Writes.seq[TaskTree](treeWrites))
-    )(unlift(TaskTree.unapply))
+
 
 
 
