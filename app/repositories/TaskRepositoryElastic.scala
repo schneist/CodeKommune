@@ -1,10 +1,8 @@
 package repositories
 
 import com.sksamuel.elastic4s.ElasticDsl._
-import com.sksamuel.elastic4s.{RichSearchResponse, ElasticClient}
-
-import domain.{TaskList, Task}
-import play.api.libs.functional.syntax._
+import com.sksamuel.elastic4s.{ElasticClient, RichSearchResponse}
+import domain.{TaskList, TaskTree}
 import play.api.libs.json._
 
 /**
@@ -17,7 +15,7 @@ trait TaskRepositoryElastic  extends TaskRepositoryComponent{
   def   childTaskFinder  = new ChildTaskFinderElastic(esClient)
 
   class ChildTaskFinderElastic(esClient: ElasticClient) extends ChildTaskFinder {
-    def getChildren(parent: String): Seq[Task] = {
+    def getChildren(parent: String): Seq[TaskTree] = {
 
       val response: RichSearchResponse = esClient.execute {
         search in "tasks" -> "task" query {
@@ -27,7 +25,7 @@ trait TaskRepositoryElastic  extends TaskRepositoryComponent{
       val resJson: JsValue = Json.parse(response.original.toString)
       val d = resJson \ "hits"
       val validated = d.validate[TaskList]
-      validated.get.tasks
+      validated.get.tasks.map(t => new TaskTree(t.name, Seq.empty))
     }
   }
 

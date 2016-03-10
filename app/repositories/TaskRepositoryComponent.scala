@@ -10,7 +10,7 @@ trait TaskRepositoryComponent {
   def childTaskFinder : ChildTaskFinder
 
   trait ChildTaskFinder{
-    def getChildren(root :String) : Seq[Task]
+    def getChildren(root: String): Seq[TaskTree]
 
   }
 }
