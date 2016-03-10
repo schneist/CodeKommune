@@ -1,26 +1,15 @@
 package controllers
 
 
-import com.sksamuel.elastic4s.ElasticDsl._
-import com.sksamuel.elastic4s.{RichSearchResponse, ElasticClient}
 import domain._
-import play.api.mvc._
-
 import play.api.libs.json._
+import play.api.mvc._
 import repositories.Services
 
-import scala.annotation.tailrec
-
-// JSON library
-import play.api.libs.json.Reads._
-
-// Custom validation helpers
-import play.api.libs.functional.syntax._
 
 // Combinator syntax
-import scala.concurrent.Future
-
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 
 class Application   extends Controller {
@@ -44,9 +33,8 @@ class Application   extends Controller {
   }
 
   private def iterate(tree : TaskTree): TaskTree ={
-
     val parents : Seq[String] = getLeaves(tree,Seq.empty);
-    parents.map(p => taskService.childTaskFinder.getChildren(p))
+    parents.map(p => tree.addChildren(p, taskService.childTaskFinder.getChildren(p))
 
     return new TaskTree("",Seq.empty)
   }

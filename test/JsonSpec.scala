@@ -3,19 +3,10 @@ package com.sksamuel.elastic4s
 import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.analyzers.KeywordAnalyzer
 import com.sksamuel.elastic4s.mappings.FieldType.StringType
-import com.sksamuel.elastic4s.testkit.{SearchMatchers, ElasticSugar}
-import com.sun.jmx.snmp.tasks.TaskServer
-import org.scalatest.{FreeSpec, Matchers}
-import com.sksamuel.elastic4s.ElasticDsl._
-import org.scalatest.WordSpec
+import com.sksamuel.elastic4s.testkit.{ElasticSugar, SearchMatchers}
 import org.scalatest.mock.MockitoSugar
-import org.specs2.control.Ok
-import play.api.test.FakeRequest
-
-import play.api.test._
-import play.api.test.Helpers._
+import org.scalatest.{Matchers, WordSpec}
 import repositories.TaskRepositoryElastic
-
 import services.TaskServiceElasticComponent
 
 
