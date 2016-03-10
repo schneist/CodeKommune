@@ -34,7 +34,7 @@ class Application   extends Controller {
 
   private def iterate(tree : TaskTree): TaskTree ={
     val parents : Seq[String] = getLeaves(tree,Seq.empty);
-    parents.map(p => tree.addChildren(p, taskService.childTaskFinder.getChildren(p))
+    //parents.map(p => tree.addChildren(p, taskService.childTaskFinder.getChildren(p))
 
     return new TaskTree("",Seq.empty)
   }
