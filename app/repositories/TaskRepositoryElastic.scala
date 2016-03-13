@@ -12,15 +12,23 @@ trait TaskRepositoryElastic  extends TaskRepositoryComponent{
 
   val esClient: ElasticClient
 
-  def   childTaskFinder  = new ChildTaskFinderElastic(esClient)
+  def childTaskFinder = new ChildTaskFinderElastic(esClient)
 
   class ChildTaskFinderElastic(esClient: ElasticClient) extends ChildTaskFinder {
     def getChildren(parent: String): Seq[TaskTree] = {
 
-      val response: RichSearchResponse = esClient.execute {
-        search in "tasks" -> "task" query {
-          termsQuery("parent", parent)
+      val req = search in "tasks" -> "task" query {
+        bool {
+          must(
+            termQuery("parent", parent)
+          ) not (
+            termQuery("name", parent)
+            )
         }
+      }
+      println(req.show) // would output json
+      val response: RichSearchResponse = esClient.execute {
+          req
       }.await
       val resJson: JsValue = Json.parse(response.original.toString)
       val d = resJson \ "hits"

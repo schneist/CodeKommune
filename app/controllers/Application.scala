@@ -6,6 +6,8 @@ import play.api.libs.json._
 import play.api.mvc._
 import repositories.Services
 
+import scala.annotation.tailrec
+
 
 // Combinator syntax
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -32,11 +34,16 @@ class Application   extends Controller {
     treeFuture.map( t => Ok(Json.toJson(t)))
   }
 
+  @tailrec
   private def iterate(tree : TaskTree): TaskTree ={
     var ret = tree
+    val size = tree.children.size
     val parents : Seq[String] = getLeaves(tree,Seq.empty);
     parents.foreach(p => ret = ret.addChildren(p, taskService.childTaskFinder.getChildren(p)))
-    ret
+    if (ret.children.size == size) {
+      return ret
+    }
+    iterate(ret)
   }
 
   private def getLeaves(tree: TaskTree,leaves : Seq[String]): Seq[String] ={
