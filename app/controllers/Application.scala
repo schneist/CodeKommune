@@ -23,7 +23,7 @@ class Application   extends Controller {
   }
 
   def tree = Action {
-    Ok(views.html.tree().toString())
+    Ok(views.html.tree())
   }
 
   def treedata = Action.async {
