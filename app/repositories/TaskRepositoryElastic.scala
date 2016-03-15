@@ -21,12 +21,12 @@ trait TaskRepositoryElastic  extends TaskRepositoryComponent{
         bool {
           must(
             termQuery("parent", parent)
-          ) not (
+          )
+          not(
             termQuery("name", parent)
-            )
+          )
         }
       }
-      println(req.show) // would output json
       val response: RichSearchResponse = esClient.execute {
           req
       }.await

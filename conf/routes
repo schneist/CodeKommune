@@ -6,6 +6,7 @@
 GET     /                           controllers.Application.tree
 GET 	/treedata.json 				controllers.Application.treedata
 GET		/treesocket				    controllers.TreeWebSocket.connect
+#PUT     /tree/task                  controllers.TreeController.add
 
 
 # Map static resources from the /public folder to the /assets URL path
