@@ -14,9 +14,8 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 
-class Application   extends Controller {
+class Application   extends Controller  with Services{
 
-  val taskService = Services.TaskServiceObj.taskServiceComponent
 
   def index = Action {
     Ok(views.html.index("Your new application is ready."))
@@ -39,7 +38,7 @@ class Application   extends Controller {
     var ret = tree
     val size = tree.children.size
     val parents : Seq[String] = getLeaves(tree,Seq.empty);
-    parents.foreach(p => ret = ret.addChildren(p, taskService.childTaskFinder.getChildren(p)))
+    parents.foreach(p => ret = ret.addChildren(p, TaskServiceObj.taskServiceComponent.childTaskFinder.getChildren(p)))
     if (ret.children.size == size) {
       return ret
     }
