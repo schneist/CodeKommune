@@ -3,9 +3,8 @@ package components
 import com.sksamuel.elastic4s.ElasticClient
 import controllers.TreeWebSocket
 import play.api.ApplicationLoader.Context
-import play.api.{ApplicationLoader, Configuration, BuiltInComponentsFromContext}
 import play.api.i18n._
-import router.Routes
+import play.api.{ApplicationLoader, BuiltInComponentsFromContext, Configuration}
 import repositories.TaskRepositoryElastic
 
 class Components(context: Context) extends BuiltInComponentsFromContext(context) with I18nComponents {
@@ -21,7 +20,7 @@ class Components(context: Context) extends BuiltInComponentsFromContext(context)
 
 
 class RepositoryComponent(configuration: Configuration) {
-  val client =  ElasticClient.transport(configuration.getConfig("elasticsearch").get.getString("elasticsearch.connection").get)
+  val client = ElasticClient.transport(configuration.getString("elasticsearch.connection").get)
 
 
 
