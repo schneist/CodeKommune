@@ -1,8 +1,6 @@
 package controllers
 
-
-import components.RepositoryComponent
-import com.google.inject.Inject
+import components.Components
 import domain.TaskTree
 import play.api.libs.json._
 import play.api.mvc._
@@ -15,7 +13,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 
-class Application(rc:RepositoryComponent ) extends Controller  {
+class Application(rc: Components) extends Controller {
 
 
   def index = Action {
@@ -39,7 +37,7 @@ class Application(rc:RepositoryComponent ) extends Controller  {
     var ret = tree
     val size = tree.children.size
     val parents : Seq[String] = getLeaves(tree,Seq.empty);
-    parents.foreach(p => ret = ret.addChildren(p, rc.TaskRepositoryObj.taskRepository.childTaskFinder.getChildren(p)))
+    parents.foreach(p => ret = ret.addChildren(p, rc.myComponent.TaskRepositoryObj.taskRepository.childTaskFinder.getChildren(p)))
     if (ret.children.size == size) {
       return ret
     }
