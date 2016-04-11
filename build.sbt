@@ -20,7 +20,7 @@ resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
 routesGenerator := InjectedRoutesGenerator
 
 
-libraryDependencies += "org.elasticsearch" % "elasticsearch" % "2.1.2"
+libraryDependencies += "org.elasticsearch" % "elasticsearch" % "2.3.0"
 
 libraryDependencies += "com.sksamuel.elastic4s" %% "elastic4s-core" % "2.1.2"
 
