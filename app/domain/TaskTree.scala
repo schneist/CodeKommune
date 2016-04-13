@@ -8,6 +8,7 @@ import play.api.libs.json.{JsPath, Writes}
   */
 case class TaskTree(name:String, children: Seq[TaskTree]){
 
+
   def addChildren(at:String,newLeaves: Seq[TaskTree]): TaskTree ={
     at match {
       case `name` => return new TaskTree(name,newLeaves)

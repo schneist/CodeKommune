@@ -5,6 +5,9 @@ import com.sksamuel.elastic4s.{ElasticClient, RichSearchResponse}
 import domain.{TaskList, TaskTree}
 import play.api.libs.json._
 
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
+
 /**
   * Created by scsf on 03.03.2016.
   */
@@ -15,25 +18,27 @@ trait TaskRepositoryElastic  extends TaskRepositoryComponent{
   def childTaskFinder = new ChildTaskFinderElastic(esClient)
 
   class ChildTaskFinderElastic(esClient: ElasticClient) extends ChildTaskFinder {
-    def getChildren(parent: String): Seq[TaskTree] = {
-
+    def getChildren(parent: String): Future[Seq[TaskTree]] = {
       val req = search in "tasks" -> "task" query {
         bool {
           must(
             termQuery("parent", parent)
           ) not(
             termQuery("name", parent)
-          )
+            )
         }
       }
-      println(req.show)
-      val response: RichSearchResponse = esClient.execute {
-          req
-      }.await
-      val resJson: JsValue = Json.parse(response.original.toString)
-      val d = resJson \ "hits"
-      val validated = d.validate[TaskList]
-      validated.get.tasks.map(t => new TaskTree(t.name, Seq.empty))
+      val responseF: Future[RichSearchResponse] = esClient.execute {
+        req
+      }
+      responseF.map {
+        response => {
+          val resJson: JsValue = Json.parse(response.original.toString)
+          val d = resJson \ "hits"
+          val validated = d.validate[TaskList]
+          validated.get.tasks.map(t => new TaskTree(t.name, Seq.empty))
+        }
+      }
     }
   }
 
