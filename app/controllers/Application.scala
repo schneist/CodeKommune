@@ -42,8 +42,8 @@ class Application(rc: Components) extends Controller {
     * sss.flatMap(sq => Future{sq.exists(p => p.children.size >0)}) match {
     * *
     * }
-   **
-   *
+    * *
+    *
     *
     * }
     * *
@@ -51,11 +51,11 @@ class Application(rc: Components) extends Controller {
     * tree.children.size match{
     * case 0 => return Future{leaves.+:(tree)}
     * case _ => return Future{tree.children.++(getLeaves(tree,leaves)))}
-   * }
     * }
-   *
-   *
-   **/
+    * }
+    *
+    *
+    **/
 
 
 }
