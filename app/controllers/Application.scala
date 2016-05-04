@@ -32,28 +32,30 @@ class Application(rc: Components) extends Controller {
     treeFuture.map( t => Ok(Json.toJson(t)))
   }
 
-  /*
-    @tailrec
-    private def iterate(tree : Future[TaskTree]):Future[TaskTree]= {
-      tree.flatMap(t => getLeaves(t, Seq.empty))
-
-       .map(p => (p, taskRepo.childTaskFinder.getChildren(p.name))).
-        map(p => p._2.map( s => p._1.children.++(s).size))
-      .exists(fint => fint  >=0).)
-      iterate(tree)
-
-    }
-
-    private def getLeaves(tree: TaskTree,leaves : Seq[TaskTree]): Future[Seq[TaskTree]] ={
-      tree.children.size match{
-        case 0 => Future{leaves.+:(tree)}
-        case _ => tree.children.flatMap( l =>  getLeaves(l,leaves).c)
-      }
-    }
-  */
-
-
-
+  /**
+    * *
+    * private def iterate(treeF : Future[TaskTree]):Future[TaskTree]= {
+    * val sss = treeF.flatMap(tree => getLeaves(tree, Seq.empty))
+    * .map(leavS => leavS.map(leav =>  {taskRepo.childTaskFinder.getChildren(leav.name).foreach(ls => leav.children.++(ls));
+    * leav
+    * }));
+    * sss.flatMap(sq => Future{sq.exists(p => p.children.size >0)}) match {
+    * *
+    * }
+   **
+   *
+    *
+    * }
+    * *
+    * private def getLeaves(tree:TaskTree,leaves : Seq[TaskTree]): Future[Seq[TaskTree]] ={
+    * tree.children.size match{
+    * case 0 => return Future{leaves.+:(tree)}
+    * case _ => return Future{tree.children.++(getLeaves(tree,leaves)))}
+   * }
+    * }
+   *
+   *
+   **/
 
 
 }
