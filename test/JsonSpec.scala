@@ -8,6 +8,7 @@ import org.scalatest.mock.MockitoSugar
 import org.scalatest.{Matchers, WordSpec}
 import repositories.TaskRepositoryElastic
 
+import scala.concurrent.ExecutionContext.Implicits.global
 
 class JsonSpec extends WordSpec with Matchers with SearchMatchers with ElasticSugar with MockitoSugar {
 
@@ -47,21 +48,12 @@ class JsonSpec extends WordSpec with Matchers with SearchMatchers with ElasticSu
           val esClient = client
         }
       }
-      TaskServiceObj.taskServiceComponent.childTaskFinder.getChildren("hank").size shouldBe(2)
-
+      TaskServiceObj.taskServiceComponent.childTaskFinder.getChildren("hank").map( t => t.size shouldBe(2))
+      TaskServiceObj.taskServiceComponent.childTaskFinder.getChildren("root").map( t => t.size shouldBe(3))
     }
 
   }
-  //"findall" should{
-  //"find all " in new WithApplication{
-  //val treedata = route(FakeRequest(GET, "/treedata.json")).get
-  //status(treedata)  shouldBe  Ok
-  //contentType(treedata) must beSome.which(_ == "text/html")
-  //contentAsString(treedata) must contain ("Your new application is ready.")
-  // }
-
-  //}
-
+ 
 
 
 }
