@@ -1,5 +1,6 @@
 package repositories
 
+
 import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.{ElasticClient, RichSearchResponse}
 import domain.{TaskList, TaskTree}
@@ -38,6 +39,20 @@ trait TaskRepositoryElastic  extends TaskRepositoryComponent{
           val validated = d.validate[TaskList]
           validated.get.tasks.map(t => new TaskTree(t.name, Seq.empty))
         }
+      }
+    }
+
+    def addDefaultData(): Future[String] = {
+      Future {
+        esClient.execute(
+          bulk(
+            index into "tasks/task" fields("name" -> "root", "parent" -> "root"),
+            index into "tasks/task" fields("name" -> "hank", "parent" -> "root"),
+            index into "tasks/task" fields("name" -> "jesse", "parent" -> "hank"),
+            index into "tasks/task" fields("name" -> "gus", "parent" -> "hank")
+          )
+        ).await
+        " OK "
       }
     }
   }

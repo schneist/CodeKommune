@@ -5,15 +5,13 @@ import domain.TaskTree
 import play.api.libs.json._
 import play.api.mvc._
 
-
-// Combinator syntax
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 
-class Application(rc: Components) extends Controller {
+// Combinator syntax
+import scala.concurrent.ExecutionContext.Implicits.global
 
-  def taskRepo = rc.myComponent.TaskRepositoryObj.taskRepository
+class Application(rc: Components) extends Controller {
 
   def index = Action {
     Ok(views.html.index("Your new application is ready."))
@@ -24,18 +22,27 @@ class Application(rc: Components) extends Controller {
   }
 
   def treedata = Action.async {
-    iterate(new TaskTree("root", Seq.empty)).map(t => Ok(Json.toJson(t)))
+    iterate(new TaskTree("root", Seq.empty)).map(x => Ok(Json.toJson(x)))
   }
 
-  private def iterate(tree: TaskTree): Future[TaskTree] = {
-    taskRepo.childTaskFinder.getChildren(tree.name).map(l => {
-      tree.children.size match {
-        case 0 => new TaskTree(tree.name, l)
-        case _ => return iterate(new TaskTree(tree.name, l))
-      }
-    }
-    )
+  def defaultdata = Action.async {
+    taskRepo.childTaskFinder.addDefaultData().map(x => Ok(x))
   }
+
+  def taskRepo = rc.myComponent.TaskRepositoryObj.taskRepository
+
+  private def iterate(tree: TaskTree): Future[TaskTree] = {
+    taskRepo.childTaskFinder.getChildren(tree.name)
+      .flatMap(l => {
+        l.size match {
+          case 0 => Future {
+            tree
+          }
+          case _ => (Future sequence l.map(subtree => iterate(subtree))).map(xx => new TaskTree(tree.name, xx))
+        }
+      })
+  }
+
 
 }
 
