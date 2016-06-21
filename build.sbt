@@ -10,23 +10,26 @@ libraryDependencies ++= Seq(
   jdbc,
   cache,
   ws,
+  javaWs,
   specs2 % Test
 )
 
 resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
+
 
 // Play provides two styles of routers, one expects its actions to be injected, the
 // other, legacy style, accesses its actions statically.
 routesGenerator := InjectedRoutesGenerator
 
 
-libraryDependencies += "org.elasticsearch" % "elasticsearch" % "2.3.0"
+libraryDependencies += "org.elasticsearch" % "elasticsearch" % "2.3.2"
 
-libraryDependencies += "com.sksamuel.elastic4s" %% "elastic4s-core" % "2.1.2"
+libraryDependencies += "com.sksamuel.elastic4s" %% "elastic4s-core" % "2.3.0"
 
-libraryDependencies += "com.sksamuel.elastic4s" %% "elastic4s-testkit" % "2.1.2"
+libraryDependencies += "com.sksamuel.elastic4s" %% "elastic4s-testkit" % "2.3.0"
 
 libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.6"
+
 
 
 fork in run := false

@@ -15,4 +15,11 @@ trait TaskRepositoryComponent {
     def getChildren(root: String): Future[Seq[TaskTree]]
 
   }
+
+  def taskRepo:TaskCRUD
+
+  trait TaskCRUD {
+    def addChildTask(parent: TaskTree, child: TaskTree) : Future[Boolean]
+    def deleteTask(parent: TaskTree, child: TaskTree) : Future[Boolean]
+  }
 }

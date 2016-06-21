@@ -2,7 +2,7 @@ package repositories
 
 
 import com.sksamuel.elastic4s.ElasticDsl._
-import com.sksamuel.elastic4s.{ElasticClient, RichSearchResponse}
+import com.sksamuel.elastic4s.{ElasticClient, IndexResult, RichSearchResponse}
 import domain.{TaskList, TaskTree}
 import play.api.libs.json._
 
@@ -16,21 +16,45 @@ trait TaskRepositoryElastic  extends TaskRepositoryComponent{
 
   val esClient: ElasticClient
 
+
+  def taskRepo = new  TaskCRUDElastic(esClient)
+
+
+   class TaskCRUDElastic (esClient: ElasticClient)  extends  TaskCRUD {
+
+    override def addChildTask(parent: TaskTree, child: TaskTree): Future[Boolean] = {
+      val responseF :Future[IndexResult]  = esClient.execute {
+        index into "tasks/task" fields("name" -> child.name, "parent" -> parent.name)
+
+      }
+      responseF.map {
+        response => {
+          response.created
+        }
+      }
+    }
+
+    override def deleteTask(parent: TaskTree, child: TaskTree): Future[Boolean] = {
+      return Future{false}
+    }
+  }
+
+
+
   def childTaskFinder = new ChildTaskFinderElastic(esClient)
 
   class ChildTaskFinderElastic(esClient: ElasticClient) extends ChildTaskFinder {
     def getChildren(parent: String): Future[Seq[TaskTree]] = {
-      val req = search in "tasks" -> "task" query {
-        bool {
-          must(
-            termQuery("parent", parent)
-          ) not(
-            termQuery("name", parent)
-            )
-        }
-      }
       val responseF: Future[RichSearchResponse] = esClient.execute {
-        req
+        search in "tasks" -> "task" query {
+          bool {
+            must(
+              termQuery("parent", parent)
+            ) not (
+              termQuery("name", parent)
+              )
+          }
+        }
       }
       responseF.map {
         response => {
@@ -56,6 +80,5 @@ trait TaskRepositoryElastic  extends TaskRepositoryComponent{
       }
     }
   }
-
 
 }
