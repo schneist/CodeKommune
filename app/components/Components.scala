@@ -7,7 +7,7 @@ import com.sksamuel.elastic4s.ElasticClient
 import play.api.ApplicationLoader.Context
 import play.api.i18n._
 import play.api.{ApplicationLoader, BuiltInComponentsFromContext, Configuration}
-import repositories.TaskRepositoryComponentElastic
+import repositories.{TaskRepositoryComponentElastic, UserRepositoryComponentElastic}
 import router.Routes
 
 import scala.concurrent.ExecutionContext
@@ -49,7 +49,7 @@ class RepositoryComponent(configuration: Configuration) {
 
 
   object UserRepositoryObj  {
-    val userRepository = new UserRepositoryComponentElastic {
+    val userRepository = new UserRepositoryComponentElastic{
       override val esClient: ElasticClient = client
     }
   }
