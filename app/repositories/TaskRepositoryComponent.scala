@@ -16,10 +16,16 @@ trait TaskRepositoryComponent {
 
   }
 
-  def taskRepo:TaskCRUD
+  def taskCrud:TaskCRUD
 
   trait TaskCRUD {
     def addChildTask(parent: TaskTree, child: TaskTree) : Future[Boolean]
     def deleteTask(parent: TaskTree, child: TaskTree) : Future[Boolean]
+  }
+
+  def taskHelpers :TaskHelpers
+
+  trait TaskHelpers{
+    def addDefaultData(): Future[String]
   }
 }

@@ -12,12 +12,11 @@ import scala.concurrent.Future
 /**
   * Created by scsf on 03.03.2016.
   */
-trait TaskRepositoryElastic  extends TaskRepositoryComponent{
+trait TaskRepositoryComponentElastic  extends TaskRepositoryComponent{
 
   val esClient: ElasticClient
 
-
-  def taskRepo = new  TaskCRUDElastic(esClient)
+  def taskCrud = new  TaskCRUDElastic(esClient)
 
 
    class TaskCRUDElastic (esClient: ElasticClient)  extends  TaskCRUD {
@@ -66,6 +65,12 @@ trait TaskRepositoryElastic  extends TaskRepositoryComponent{
       }
     }
 
+
+  }
+
+  def taskHelpers  = new TaskHelpersElastic(esClient)
+
+  class TaskHelpersElastic(esClient: ElasticClient) extends TaskHelpers {
     def addDefaultData(): Future[String] = {
       Future {
         esClient.execute(

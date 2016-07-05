@@ -1,23 +1,31 @@
 package controllers
 
+import com.mohiva.play.silhouette.api.{Environment, HandlerResult, Silhouette}
+import com.mohiva.play.silhouette.api.actions.{DefaultSecuredAction, SecuredAction, UnsecuredAction, UserAwareAction}
 import components.Components
 import domain.TaskTree
-import play.api.libs.json.Json._
-import play.api.libs.json.{JsObject, _}
+import play.api.libs.json._
 import play.api.mvc._
+import repositories.TaskRepositoryComponentElastic
 
-
-import scala.collection.Map
 import scala.concurrent.Future
-
-
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class Application(rc: Components) extends Controller{
+class Application(rc: Components,sil:Silhouette[KommunardEnv]) extends Controller {
 
 
-  def index =Action { implicit request =>
-    Ok(views.html.index(request.toString()))
+  val taskService = rc.repositoryComponent.TaskRepositoryObj.taskRepository
+
+
+
+
+  def index =Action.async{ implicit request =>
+    sil.SecuredRequestHandler { securedRequest =>
+      Future.successful(HandlerResult(Ok, Some(securedRequest.identity)))
+    }.map {
+      case HandlerResult(r, Some(user)) => Ok(Json.toJson(request.toString()))
+      case HandlerResult(r, None) => Unauthorized
+    }
   }
 
   def tree = Action {
@@ -31,17 +39,16 @@ class Application(rc: Components) extends Controller{
   def addTask = Action.async {
     val parent = new TaskTree("root", Seq.empty)
     val child = new TaskTree("root", Seq.empty)
-    rc.myComponent.TaskRepositoryObj.taskRepository.taskRepo.addChildTask(parent,child).map(res => Ok(res.toString))
+    taskService.taskCrud.addChildTask(parent,child).map(res => Ok(res.toString))
   }
 
   def defaultdata = Action.async {
-    taskRepo.childTaskFinder.addDefaultData().map(x => Ok(x))
+    taskService.taskHelpers.addDefaultData().map(x => Ok(x))
   }
 
-  def taskRepo = rc.myComponent.TaskRepositoryObj.taskRepository
 
   private def iterate(tree: TaskTree): Future[TaskTree] = {
-    taskRepo.childTaskFinder.getChildren(tree.name)
+    taskService.childTaskFinder.getChildren(tree.name)
       .flatMap(l => {
         l.size match {
           case 0 => Future {tree}
@@ -49,7 +56,6 @@ class Application(rc: Components) extends Controller{
         }
       })
   }
-
 
 }
 

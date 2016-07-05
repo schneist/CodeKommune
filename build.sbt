@@ -6,6 +6,9 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala)
 
 scalaVersion := "2.11.8"
 
+resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
+resolvers += Resolver.jcenterRepo
+
 libraryDependencies ++= Seq(
   jdbc,
   cache,
@@ -14,8 +17,14 @@ libraryDependencies ++= Seq(
   specs2 % Test
 )
 
-resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
 
+libraryDependencies ++= Seq(
+  "com.mohiva" %% "play-silhouette" % "4.0.0-RC1",
+  "com.mohiva" %% "play-silhouette-password-bcrypt" % "4.0.0-RC1",
+  "com.mohiva" %% "play-silhouette-persistence" % "4.0.0-RC1",
+  "com.mohiva" %% "play-silhouette-crypto-jca" % "4.0.0-RC1",
+  filters
+)
 
 // Play provides two styles of routers, one expects its actions to be injected, the
 // other, legacy style, accesses its actions statically.

@@ -6,7 +6,7 @@ import com.sksamuel.elastic4s.mappings.FieldType.StringType
 import com.sksamuel.elastic4s.testkit.{ElasticSugar, SearchMatchers}
 import org.scalatest.mock.MockitoSugar
 import org.scalatest.{Matchers, WordSpec}
-import repositories.TaskRepositoryElastic
+import repositories.TaskRepositoryComponentElastic
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -44,7 +44,7 @@ class JsonSpec extends WordSpec with Matchers with SearchMatchers with ElasticSu
   "task repo " should {
     "find all children" in {
       object TaskServiceObj {
-        val taskServiceComponent = new  TaskRepositoryElastic {
+        val taskServiceComponent = new  TaskRepositoryComponentElastic {
           val esClient = client
         }
       }
