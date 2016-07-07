@@ -335,6 +335,29 @@ treeJSON = d3.json("treedata.json", function(error, treeData) {
         centerNode(d);
     }
 
+    function dclick(d) {
+
+            d3.json("")
+            if (d3.event.defaultPrevented) return; // click suppressed
+
+
+            var newNode = {"name": "new Node","children": []};
+
+            if(d.children == null){
+                d.children = []
+            }
+            d.children.push(newNode)
+
+              visit(d, function(d) {
+                   update(d);
+                }, function(d) {
+                   update(d);
+                });
+
+            centerNode(d);
+
+        }
+
     function update(source) {
         // Compute the new height, function counts total children of root node and sets tree height accordingly.
         // This prevents the layout looking squashed when new nodes are made visible or looking sparse when nodes are removed
@@ -380,7 +403,8 @@ treeJSON = d3.json("treedata.json", function(error, treeData) {
             .attr("transform", function(d) {
                 return "translate(" + source.y0 + "," + source.x0 + ")";
             })
-            .on('click', click);
+            .on('click', click)
+            .on('dblclick', dclick);
 
         nodeEnter.append("circle")
             .attr('class', 'nodeCircle')

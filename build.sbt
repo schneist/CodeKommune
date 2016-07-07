@@ -8,7 +8,6 @@ scalaVersion := "2.11.8"
 
 resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
 resolvers += Resolver.jcenterRepo
-
 libraryDependencies ++= Seq(
   jdbc,
   cache,
@@ -31,7 +30,7 @@ libraryDependencies ++= Seq(
 routesGenerator := InjectedRoutesGenerator
 
 
-libraryDependencies += "org.elasticsearch" % "elasticsearch" % "2.3.2"
+libraryDependencies += "org.elasticsearch" % "elasticsearch" % "2.3.1"
 
 libraryDependencies += "com.sksamuel.elastic4s" %% "elastic4s-core" % "2.3.0"
 

@@ -17,8 +17,6 @@ class Application(rc: Components,sil:Silhouette[KommunardEnv]) extends Controlle
   val taskService = rc.repositoryComponent.TaskRepositoryObj.taskRepository
 
 
-
-
   def index =Action.async{ implicit request =>
     sil.SecuredRequestHandler { securedRequest =>
       Future.successful(HandlerResult(Ok, Some(securedRequest.identity)))
