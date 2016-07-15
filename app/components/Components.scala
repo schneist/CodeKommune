@@ -18,7 +18,8 @@ class Components(context: Context) extends BuiltInComponentsFromContext(context)
 
 val repositoryComponent = new RepositoryComponent(configuration )
 
-  implicit val ec:ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
+  implicit val executionContext :ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
+  implicit val components: Components = this
 
   lazy val authEnv: AuthenticationEnvironment = new AuthenticationEnvironment
 

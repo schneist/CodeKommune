@@ -16,7 +16,7 @@ trait UserRepositoryComponent {
   trait UserCRUD {
     def addUser(user:Kommunard) : Future[Boolean]
     def deleteUser(user:Kommunard) : Future[Boolean]
-    def getUser(login:String) : Future[Kommunard]
+    def getUser(login:String) : Future[Option[Kommunard]]
   }
 
 

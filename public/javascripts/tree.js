@@ -342,9 +342,13 @@ treeJSON = d3.json("treedata.json", function(error, treeData) {
 
 
             var newNode = {"name": "new Node","children": []};
-
+            )
             if(d.children == null){
-                d.children = []
+                if(d_children != null){
+                    d = toggleChildren(d);
+                }else{
+                    d.children = [];
+                }
             }
             d.children.push(newNode)
 
@@ -354,6 +358,16 @@ treeJSON = d3.json("treedata.json", function(error, treeData) {
                    update(d);
                 });
 
+
+            d3.xhr(url)
+                .header("Content-Type", "application/json")
+                .post(
+                    JSON.stringify({year: "2012", customer: "type1"}),
+                    function(err, rawData){
+                        var data = JSON.parse(rawData);
+                        console.log("got response", data);
+                    }
+                );
             centerNode(d);
 
         }

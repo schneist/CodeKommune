@@ -13,7 +13,6 @@ trait TaskRepositoryComponent {
 
   trait ChildTaskFinder{
     def getChildren(root: String): Future[Seq[TaskTree]]
-
   }
 
   def taskCrud:TaskCRUD

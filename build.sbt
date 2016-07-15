@@ -18,10 +18,10 @@ libraryDependencies ++= Seq(
 
 
 libraryDependencies ++= Seq(
-  "com.mohiva" %% "play-silhouette" % "4.0.0-RC1",
-  "com.mohiva" %% "play-silhouette-password-bcrypt" % "4.0.0-RC1",
-  "com.mohiva" %% "play-silhouette-persistence" % "4.0.0-RC1",
-  "com.mohiva" %% "play-silhouette-crypto-jca" % "4.0.0-RC1",
+  "com.mohiva" %% "play-silhouette" % "4.0.0",
+  "com.mohiva" %% "play-silhouette-password-bcrypt" % "4.0.0",
+  "com.mohiva" %% "play-silhouette-persistence" % "4.0.0",
+  "com.mohiva" %% "play-silhouette-crypto-jca" % "4.0.0",
   filters
 )
 
@@ -30,7 +30,7 @@ libraryDependencies ++= Seq(
 routesGenerator := InjectedRoutesGenerator
 
 
-libraryDependencies += "org.elasticsearch" % "elasticsearch" % "2.3.1"
+libraryDependencies += "org.elasticsearch" % "elasticsearch" % "2.3.4"
 
 libraryDependencies += "com.sksamuel.elastic4s" %% "elastic4s-core" % "2.3.0"
 

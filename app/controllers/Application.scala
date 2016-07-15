@@ -16,7 +16,6 @@ class Application(rc: Components,sil:Silhouette[KommunardEnv]) extends Controlle
 
   val taskService = rc.repositoryComponent.TaskRepositoryObj.taskRepository
 
-
   def index =Action.async{ implicit request =>
     sil.SecuredRequestHandler { securedRequest =>
       Future.successful(HandlerResult(Ok, Some(securedRequest.identity)))
@@ -34,9 +33,9 @@ class Application(rc: Components,sil:Silhouette[KommunardEnv]) extends Controlle
     iterate(new TaskTree("root", Seq.empty)).map(x => Ok(Json.toJson(x)))
   }
 
-  def addTask = Action.async {
+  def addTask = Action.async { implicit request =>
     val parent = new TaskTree("root", Seq.empty)
-    val child = new TaskTree("root", Seq.empty)
+    val child = new TaskTree(request.getQueryString("name").getOrElse(""), Seq.empty)
     taskService.taskCrud.addChildTask(parent,child).map(res => Ok(res.toString))
   }
 
