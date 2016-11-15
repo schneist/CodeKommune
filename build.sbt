@@ -1,43 +1,66 @@
+import sbt.Keys._
+import sbt.Project.projectToRef
+
 name := """CodeKommune"""
 
-version := "1.0-SNAPSHOT"
+lazy val scalaV = "2.11.8"
+lazy val clients = Seq(client)
 
-lazy val root = (project in file(".")).enablePlugins(PlayScala)
+lazy val shared = (crossProject.crossType(CrossType.Pure) in file("shared")).
+  settings(
+    scalaVersion := scalaV,
+    publishArtifact := false,
+    libraryDependencies ++= Seq(
+      "com.typesafe.play" %% "play-json" % "2.5.8",
+      "org.scalatest" %% "scalatest" % "2.2.6"
+    )
+  ).
+  jsConfigure(_ enablePlugins ScalaJSPlay)
 
-scalaVersion := "2.11.8"
-
-resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
-resolvers += Resolver.jcenterRepo
-libraryDependencies ++= Seq(
-  jdbc,
-  cache,
-  ws,
-  javaWs,
-  specs2 % Test
-)
-
-
-libraryDependencies ++= Seq(
-  "com.mohiva" %% "play-silhouette" % "4.0.0",
-  "com.mohiva" %% "play-silhouette-password-bcrypt" % "4.0.0",
-  "com.mohiva" %% "play-silhouette-persistence" % "4.0.0",
-  "com.mohiva" %% "play-silhouette-crypto-jca" % "4.0.0",
-  filters
-)
-
-// Play provides two styles of routers, one expects its actions to be injected, the
-// other, legacy style, accesses its actions statically.
-routesGenerator := InjectedRoutesGenerator
+lazy val sharedJvm = shared.jvm
+lazy val sharedJs = shared.js
 
 
-libraryDependencies += "org.elasticsearch" % "elasticsearch" % "2.3.4"
+lazy val server = (project in file("server")).settings(
+  version := "1.1-SNAPSHOT",
+  resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases" ,
+  resolvers += Resolver.jcenterRepo,
+  scalaVersion := scalaV,
+  scalaJSProjects := clients,
+  pipelineStages := Seq(scalaJSProd, gzip),
+  mainClass := Some("application.SimpleApplicationLoader"),
+  libraryDependencies ++= Seq(
+    jdbc,
+    cache,
+    ws,
+    javaWs,
+    specs2 % Test
+  ),
 
-libraryDependencies += "com.sksamuel.elastic4s" %% "elastic4s-core" % "2.3.0"
+  libraryDependencies ++= Seq(
+    "org.elasticsearch" % "elasticsearch" % "2.3.4",
+    "com.sksamuel.elastic4s" %% "elastic4s-core" % "2.3.0",
+    "com.sksamuel.elastic4s" %% "elastic4s-testkit" % "2.3.0",
+    "org.scalatest" %% "scalatest" % "2.2.6"
+  )
 
-libraryDependencies += "com.sksamuel.elastic4s" %% "elastic4s-testkit" % "2.3.0"
+).enablePlugins(PlayScala).
+  aggregate(clients.map(projectToRef): _*).
+  dependsOn(sharedJvm)
 
-libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.6"
 
 
+lazy val client = (project in file("client")).settings(
+  scalaVersion := scalaV,
+  publishArtifact := false,
+  persistLauncher := true,
+  persistLauncher in Test := false,
+  libraryDependencies ++= Seq(
+    "org.scala-js" %%% "scalajs-dom" % "0.8.0"
+  )
+).enablePlugins(ScalaJSPlugin, ScalaJSPlay).
+  dependsOn(sharedJs)
 
-fork in run := false
+// loads the Play project at sbt startup
+onLoad in Global := (Command.process("project server", _: State)) compose (onLoad in Global).value
+
