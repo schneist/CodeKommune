@@ -1,12 +1,11 @@
 package controllers
 
-import actors.UserActor
-import akka.actor.{ActorRef, ActorSystem, Props}
+import akka.NotUsed
+import akka.actor.ActorSystem
+import akka.stream._
 import akka.stream.javadsl.BidiFlow
-import akka.stream.scaladsl.{Flow, Keep, Sink, Source}
-import akka.stream.{ActorMaterializer, OverflowStrategy}
+import akka.stream.scaladsl.{Broadcast, Flow, GraphDSL, Sink, Source}
 import main.scala.shared.model.{ErrorMessage, WebSocketMessage}
-import org.reactivestreams.Publisher
 import play.api.http.websocket.{Message, TextMessage}
 import play.api.libs.json.{JsError, JsSuccess, Json}
 import play.api.mvc.WebSocket.MessageFlowTransformer
@@ -16,6 +15,33 @@ class TreeWebsocket () extends Controller {
 
   implicit val system = ActorSystem()
   implicit val mat = ActorMaterializer()
+
+
+  //internal
+  /**
+    * Incoming requests that change the tree always  go  only to the repository
+    * Changes in the repository go to all the connected sockets
+    * the outgoing message queue therefore needs to change teh flow graph for connects
+    */
+  private val messageQueueOut: Sink[WebSocketMessage,NotUsed] = updateOutgoingMessageQueue(Seq.empty)
+  private val messageQueueIn = Source.queue(1000,OverflowStrategy.backpressure)
+
+  implicit val materializer: Materializer = ActorMaterializer(
+    ActorMaterializerSettings(system)
+      .withAutoFusing(true)
+      .withDebugLogging(false)
+      .withSupervisionStrategy(Supervision.getResumingDecider)
+  )
+
+  //functions
+  private val updateOutgoingMessageQueue: (Seq[Sink[WebSocketMessage, NotUsed]]) =>  Sink[WebSocketMessage,NotUsed] = {
+    listeners => {
+      Sink.fromGraph(GraphDSL.create() { implicit builder =>
+        val B = builder.add(Broadcast[WebSocketMessage](listeners.size))
+        SinkShape(B.in)
+      })
+    }
+  }
 
   def infunc: (Message) => WebSocketMessage = {
     case tm:TextMessage =>
@@ -36,10 +62,7 @@ class TreeWebsocket () extends Controller {
     }
 
   def treesocket: WebSocket = WebSocket.accept[WebSocketMessage, WebSocketMessage] { requestHeader =>
-    val userActorSource: Source[WebSocketMessage, ActorRef] = Source.actorRef[WebSocketMessage](10, OverflowStrategy.backpressure)
-    val (webSocketOut: ActorRef, webSocketIn: Publisher[WebSocketMessage]) = userActorSource.toMat(Sink.asPublisher(fanout = false))(Keep.both).run()
-    val userActor: ActorRef = system.actorOf(Props(classOf[UserActor], webSocketOut), requestHeader.remoteAddress)
-    Flow.fromSinkAndSource(Sink.actorRef(userActor, akka.actor.Status.Success(())), Source.fromPublisher(webSocketIn))
+    Flow.fromSinkAndSource(messageQueueOut,messageQueueIn)
   }
 }
 

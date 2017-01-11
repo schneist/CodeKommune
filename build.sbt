@@ -1,7 +1,7 @@
 import sbt.Keys._
 import sbt.Project.projectToRef
 
-name := """CodeKommune"""
+name := "CodeKommune"
 
 lazy val scalaV = "2.11.8"
 lazy val clients = Seq(client)
@@ -38,10 +38,11 @@ lazy val server = (project in file("server")).settings(
   ),
 
   libraryDependencies ++= Seq(
-    "org.elasticsearch" % "elasticsearch" % "2.3.4",
-    "com.sksamuel.elastic4s" %% "elastic4s-core" % "2.3.0",
-    "com.sksamuel.elastic4s" %% "elastic4s-testkit" % "2.3.0",
-    "org.scalatest" %% "scalatest" % "2.2.6"
+    "org.elasticsearch" % "elasticsearch" % "5.0.0",
+    "com.sksamuel.elastic4s" %% "elastic4s-core" % "5.0.0",
+    "com.sksamuel.elastic4s" %% "elastic4s-testkit" % "5.0.0",
+    "org.scalatest" %% "scalatest" % "2.2.6",
+    "com.typesafe.akka" %% "akka-stream" % "2.4.16"
   )
 
 ).enablePlugins(PlayScala).
