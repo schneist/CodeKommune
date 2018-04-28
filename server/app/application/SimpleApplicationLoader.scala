@@ -4,6 +4,7 @@ import com.sksamuel.elastic4s.ElasticClient
 import play.api.{ApplicationLoader, BuiltInComponentsFromContext, Configuration}
 import play.api.ApplicationLoader.Context
 import play.api.i18n.I18nComponents
+import play.filters.HttpFiltersComponents
 import router.Routes
 
 import scala.concurrent.ExecutionContext
@@ -17,17 +18,18 @@ class SimpleApplicationLoader extends ApplicationLoader {
   }
 }
 
-class Components(context: Context) extends BuiltInComponentsFromContext(context) with I18nComponents {
+class Components(context: Context)
+  extends BuiltInComponentsFromContext(context)
+    with HttpFiltersComponents
+    with controllers.AssetsComponents {
 
   val repositoryComponent = new RepositoryComponent(configuration )
 
-
-  implicit val executionContext :ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
   implicit val components: Components = this
 
 
   lazy val treeWebSocket = new controllers.TreeWebsocket()
-  lazy val assets = new controllers.Assets(httpErrorHandler)
+
   lazy val router = new Routes(httpErrorHandler,treeWebSocket)
 
 }

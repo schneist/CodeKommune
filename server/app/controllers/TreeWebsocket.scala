@@ -23,8 +23,8 @@ class TreeWebsocket () extends Controller {
     * Changes in the repository go to all the connected sockets
     * the outgoing message queue therefore needs to change teh flow graph for connects
     */
-  private val messageQueueOut: Sink[WebSocketMessage,NotUsed] = updateOutgoingMessageQueue(Seq.empty)
-  private val messageQueueIn = Source.queue(1000,OverflowStrategy.backpressure)
+  private lazy val messageQueueOut: Sink[WebSocketMessage,NotUsed] = updateOutgoingMessageQueue(Seq.empty)
+  private lazy val messageQueueIn = Source.queue(1000,OverflowStrategy.backpressure)
 
   implicit val materializer: Materializer = ActorMaterializer(
     ActorMaterializerSettings(system)
