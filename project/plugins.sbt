@@ -8,7 +8,7 @@ resolvers += Resolver.sbtPluginRepo("releases")
 // Sbt plugins
 
 // The Typesafe repository
-resolvers += "Typesafe repository" at "https://repo.typesafe.com/typesafe/maven-releases/"
+resolvers += "Typesafe repository MAven" at "https://repo.typesafe.com/typesafe/maven-releases/"
 
 // Use the Play sbt plugin for Play projects
 addSbtPlugin ("com.typesafe.play" % "sbt-plugin" % "2.6.13" )
@@ -27,6 +27,7 @@ addSbtPlugin("com.typesafe.sbt" % "sbt-gzip" % "1.0.2")
 
 addSbtPlugin("com.typesafe.sbt" % "sbt-digest" % "1.1.3")
 
-addSbtPlugin("ch.epfl.scala" % "sbt-scalajs-bundler" % "0.10.0")
+addSbtPlugin("ch.epfl.scala" % "sbt-scalajs-bundler" % "0.12.0")
 
 addSbtPlugin("com.dwijnand" % "sbt-travisci" % "1.1.1")
+

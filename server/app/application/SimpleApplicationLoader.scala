@@ -28,9 +28,9 @@ class Components(context: Context)
   implicit val components: Components = this
 
 
-  lazy val treeWebSocket = new controllers.TreeWebsocket()
 
-  lazy val router = new Routes(httpErrorHandler,treeWebSocket)
+
+  lazy val router = new Routes(httpErrorHandler)
 
 }
 

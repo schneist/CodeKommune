@@ -13,7 +13,7 @@ abstract class TaskRepository {
 
   def deleteTask(id: String) : Future[Boolean]
 
-  def addTask(task:Task) : Future[Boolean]
+  def addTask(task:Task) : Future[Task]
 
   def getTask(id:String) :Future[Task]
 
