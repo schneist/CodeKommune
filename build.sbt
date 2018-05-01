@@ -26,8 +26,10 @@ lazy val server = (project in file("server")).settings(commonSettings).settings(
     "org.elasticsearch" % "elasticsearch" % "6.2.4",
     "com.sksamuel.elastic4s" %% "elastic4s-core" % "6.2.6",
     "com.sksamuel.elastic4s" %% "elastic4s-testkit" % "6.2.6",
-    "org.scalatest" %% "scalatest" % "3.0.5"
-
+    "org.scalatest" %% "scalatest" % "3.0.5",
+    "org.sangria-graphql" %% "sangria" % "1.4.0",
+    "org.sangria-graphql" %% "sangria-relay" % "1.4.0",
+    "org.sangria-graphql" %% "sangria-play-json" % "1.0.4"
   )
 
 ).enablePlugins(PlayScala).

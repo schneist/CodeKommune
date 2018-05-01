@@ -5,3 +5,4 @@
 # Home page
 #GET     /treesocket                 controllers.TreeWebsocket.treesocket
 
+POST  /graphql  controllers.EntriesController.graphql
