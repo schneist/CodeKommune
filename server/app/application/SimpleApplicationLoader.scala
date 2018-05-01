@@ -52,7 +52,7 @@ class RepositoryComponent(configuration: Configuration) {
 
   val taskRepo = new TaskRepository
   {
-    override def searchTask(query: String): Future[List[Task]] = ???
+    override def searchTask(query: String): Future[List[Task]] = Future.successful(List(Task(id=Some("5"),parent="5",name="5",creationUser = None,assignedUser = None)))
 
     override def deleteTask(id: String): Future[Boolean] = ???
 

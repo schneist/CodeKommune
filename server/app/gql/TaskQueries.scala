@@ -6,13 +6,13 @@ import sangria.relay._
 
 object TaskQueries {
   import gql.GQLSchema._
-  val namesArgument = Argument("names", ListInputType(StringType))
+  val namesArgument = Argument("names", StringType)
 
   val QueryType = ObjectType("Query",
     fields[TaskRepository, Unit](
       Field(name= "task",
         fieldType =ListType(TaskType),
-        description = Some("Returns all mathcing Tasks"),
+        description = Some("Returns all matching Tasks"),
         arguments = namesArgument :: Nil,
         resolve = c ⇒ c.ctx.searchTask(c.arg(namesArgument.name))
       )
