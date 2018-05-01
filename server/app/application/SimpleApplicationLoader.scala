@@ -33,14 +33,16 @@ class Components(context: Context)
 
   implicit val components: Components = this
 
-implicit  val tk = repositoryComponent.taskRepo
+  implicit  val tk = repositoryComponent.taskRepo
   lazy val ec = new EntriesController()
 
-  lazy val router = new Routes(httpErrorHandler,ec )
+  lazy val router = new Routes(httpErrorHandler,ec ,assets)
 
   override def actionBuilder: ActionBuilder[Request, AnyContent] = defaultActionBuilder
 
   override def parsers: PlayBodyParsers = playBodyParsers
+
+  override def httpFilters: Seq[EssentialFilter] = Seq.empty
 }
 
 

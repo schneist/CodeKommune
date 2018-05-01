@@ -28,6 +28,10 @@ class EntriesController (implicit exec: ExecutionContext,
     Ok(SchemaRenderer.renderSchema(TaskQueries.schema))
   }
 
+  def graphiql = Action {
+    Ok(views.html.graphiql(None))
+  }
+
   def graphql = Action.async(parse.json) { request ⇒
     val query = (request.body \ "query").as[String]
     val operation = (request.body \ "operationName").asOpt[String]
@@ -47,6 +51,9 @@ class EntriesController (implicit exec: ExecutionContext,
       // can't parse GraphQL query, return error
       case Failure(error: SyntaxError) ⇒
         Future.successful(BadRequest(Json.obj("error" → error.getMessage)))
+      case Failure(t: Throwable) ⇒
+        Future.successful(BadRequest(Json.obj("error" → t.getMessage)))
+
     }
   }
 

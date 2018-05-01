@@ -3,6 +3,8 @@
 # ~~~~
 
 # Home page
-#GET     /treesocket                 controllers.TreeWebsocket.treesocket
+GET         /graphiql               controllers.EntriesController.graphiql
+POST        /graphql                controllers.EntriesController.graphql
+GET         /assets/*file           controllers.Assets.versioned(path="/public", file: Asset)
+GET         /render-schema          controllers.EntriesController.renderSchema
 
-POST  /graphql  controllers.EntriesController.graphql
