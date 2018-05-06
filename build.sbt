@@ -29,7 +29,7 @@ lazy val server = (project in file("server")).settings(commonSettings).settings(
     "org.scalatest" %% "scalatest" % "3.0.5",
     "org.sangria-graphql" %% "sangria" % "1.4.0",
     "org.sangria-graphql" %% "sangria-relay" % "1.4.0",
-    "org.sangria-graphql" %% "sangria-play-json" % "1.0.4"
+    "org.sangria-graphql" %% "sangria-play-json" % "1.0.4",
   )
 
 ).enablePlugins(PlayScala).
@@ -81,7 +81,10 @@ lazy val frontend = (project in file("frontend")).settings(commonSettings).setti
 lazy val shared = (crossProject.crossType(CrossType.Pure) in file("shared")).settings(commonSettings).settings(
 
   libraryDependencies ++= Seq(
-    "com.typesafe.play" %%% "play-json" % "2.6.7"
+    "com.typesafe.play" %%% "play-json" % "2.6.7",
+    "org.typelevel" %%% "cats-core" % "1.1.0",
+    "org.typelevel" %%% "cats-free" % "1.1.0",
+    "org.typelevel" %%% "cats-laws" % "1.1.0",
   )
 )
 lazy val sharedJvm = shared.jvm

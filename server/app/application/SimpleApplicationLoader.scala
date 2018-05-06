@@ -1,18 +1,16 @@
 package application
 
-import com.sksamuel.elastic4s.ElasticClient
 import com.sksamuel.elastic4s.http.HttpClient
 import controllers.EntriesController
 import domain.Task
-import play.api.{ApplicationLoader, BuiltInComponentsFromContext, Configuration}
 import play.api.ApplicationLoader.Context
-import play.api.i18n.I18nComponents
 import play.api.mvc._
+import play.api.{ApplicationLoader, BuiltInComponentsFromContext, Configuration}
 import play.filters.HttpFiltersComponents
 import repo.TaskRepository
 import router.Routes
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
 /**
   * Created by stefan.schneider on 31.10.2016.
@@ -52,7 +50,7 @@ class RepositoryComponent(configuration: Configuration) {
 
   val taskRepo = new TaskRepository
   {
-    override def searchTask(query: String): Future[List[Task]] = Future.successful(List(Task(id=Some("5"),parent="5",name="5",creationUser = None,assignedUser = None)))
+    override def searchTask(query: String): Future[List[Task]] = Future.successful(List.empty)
 
     override def deleteTask(id: String): Future[Boolean] = ???
 
