@@ -51,7 +51,8 @@ lazy val frontend = (project in file("frontend")).settings(commonSettings).setti
     "me.shadaj" %%% "slinky-core" % "0.3.2",
     "me.shadaj" %%% "slinky-web" % "0.3.2",
     "me.shadaj" %%% "slinky-hot" % "0.3.2",
-    "me.shadaj" %%% "slinky-scalajsreact-interop" % "0.3.2"
+    "me.shadaj" %%% "slinky-scalajsreact-interop" % "0.3.2",
+
   ),
   addCompilerPlugin("org.scalameta" % "paradise" % "3.0.0-M11" cross CrossVersion.full),
 

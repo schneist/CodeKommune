@@ -28,9 +28,6 @@ class EntriesController (implicit exec: ExecutionContext,
     Ok(SchemaRenderer.renderSchema(TaskQueries.schema))
   }
 
-  def graphiql = Action {
-    Ok(views.html.graphiql(None))
-  }
 
   def graphql = Action.async(parse.json) { request ⇒
     val query = (request.body \ "query").as[String]
