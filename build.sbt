@@ -39,45 +39,21 @@ lazy val server = (project in file("server")).settings(commonSettings).settings(
 
 
 lazy val frontend = (project in file("frontend")).settings(commonSettings).settings(
-  //scalaJSUseMainModuleInitializer := true,
+  scalaJSUseMainModuleInitializer := true,
   name := "frontend",
   libraryDependencies ++= Seq(
     "org.scala-js" %%% "scalajs-dom" % "0.9.4"
   ),
-  npmDependencies in Compile ++= Seq(
-    "snabbdom" -> "0.5.3"
-  ),
-  jsEnv := new org.scalajs.jsenv.jsdomnodejs.JSDOMNodeJSEnv(), // to make the DOM available
+  scalacOptions += "-P:scalajs:sjsDefinedByDefault",
   libraryDependencies ++= Seq(
     "me.shadaj" %%% "slinky-core" % "0.3.2",
     "me.shadaj" %%% "slinky-web" % "0.3.2",
     "me.shadaj" %%% "slinky-hot" % "0.3.2",
     "me.shadaj" %%% "slinky-scalajsreact-interop" % "0.3.2",
-
   ),
   addCompilerPlugin("org.scalameta" % "paradise" % "3.0.0-M11" cross CrossVersion.full),
 
-  npmDependencies in Compile += "react" -> "16.3.1",
-  npmDependencies in Compile += "react-dom" -> "16.3.1",
-  npmDependencies in Compile += "react-proxy" -> "1.1.8",
-  npmDevDependencies in Compile += "file-loader" -> "1.1.11",
-  npmDevDependencies in Compile += "style-loader" -> "0.20.3",
-  npmDevDependencies in Compile += "css-loader" -> "0.28.11",
-  npmDevDependencies in Compile += "html-webpack-plugin" -> "3.2.0",
-  npmDevDependencies in Compile += "copy-webpack-plugin" -> "4.5.1",
-
-
-  version in webpack := "4.5.0",
-  version in startWebpackDevServer:= "3.1.3",
-
-  webpackConfigFile in fastOptJS := Some(baseDirectory.value / "webpack-fastopt.config.js"),
-  webpackConfigFile in fullOptJS := Some(baseDirectory.value / "webpack-opt.config.js"),
-
-  webpackDevServerExtraArgs in fastOptJS := Seq("--inline", "--hot"),
-
-  webpackBundlingMode in fastOptJS := BundlingMode.LibraryOnly(),
-  scalacOptions += "-P:scalajs:sjsDefinedByDefault"
-).enablePlugins(ScalaJSPlugin, ScalaJSWeb, ScalaJSBundlerPlugin).
+).enablePlugins(ScalaJSPlugin, ScalaJSWeb).
   dependsOn(sharedJs)
 
 lazy val shared = (crossProject.crossType(CrossType.Pure) in file("shared")).settings(commonSettings).settings(
@@ -93,7 +69,7 @@ lazy val sharedJvm = shared.jvm
 lazy val sharedJs = shared.js
 
 lazy val commonSettings = Seq(
-  scalaVersion := "2.12.6",
+  scalaVersion := "2.12.4",
   version := "1.0-" + new java.util.Date().getTime,
 
 )

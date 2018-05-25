@@ -1,7 +1,15 @@
-@(message: String)
+@(title: String)
 
-@main("Play with Scala.js showing scalajs-react with Diode and Autowire") {
-<h2>Play and Scala.js Autowire'd showing a server echoed message on a react component with state updated from diode!</h2>
-<div id="root">
-</div>
-}
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>@title</title>
+    <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/main.css")">
+    <link rel="shortcut icon" type="image/png" href="@routes.Assets.versioned("images/favicon.png")">
+</head>
+<body>
+    @scalajs.html.scripts("frontend", routes.Assets.versioned(_).toString, name => getClass.getResource(s"/public/$name") != null)
+
+</body>
+</html>

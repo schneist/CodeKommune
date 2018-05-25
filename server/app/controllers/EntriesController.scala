@@ -4,7 +4,7 @@ import akka.actor.ActorSystem
 import cats.implicits._
 import gql.TaskQueries
 import play.api.libs.json.{JsObject, JsString, Json}
-import play.api.mvc._
+import play.api.mvc.{Action, _}
 import repo.TaskRepository
 import sangria.ast.Document
 import sangria.execution._
@@ -23,7 +23,9 @@ class EntriesController (implicit exec: ExecutionContext,
                          taskRepo:TaskRepository
                         )extends AbstractController(cc){
 
-
+  def index = Action {
+    Ok(views.html.index(""))
+  }
   def renderSchema = Action {
     Ok(SchemaRenderer.renderSchema(TaskQueries.schema))
   }
