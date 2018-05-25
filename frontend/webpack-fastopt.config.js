@@ -5,8 +5,7 @@ var CopyWebpackPlugin = require('copy-webpack-plugin');
 module.exports = {
 mode: 'development',
   entry: {
-    "frontend-fastopt": ["./frontend-fastopt-entrypoint.js"],
-    "launcher": ["./hot-launcher.js"]
+    "frontend-fastopt": ["./frontend-fastopt-entrypoint.js"]
   },
   output: {
     path: __dirname,
