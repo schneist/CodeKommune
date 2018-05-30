@@ -1,13 +1,13 @@
-import org.scalajs.dom
-import org.scalajs.dom.Event
-import org.scalajs.dom.raw.HTMLInputElement
-import slinky.core.annotations.react
+import org.scalajs.dom.raw.{Event, HTMLInputElement}
+import org.scalajs.dom.{document, html}
 import slinky.core._
+import slinky.core.annotations.react
 import slinky.web.ReactDOM
 import slinky.web.html._
-import slinky.scalajsreact.Converters._
 
+import scala.scalajs.js
 import scala.scalajs.js.Date
+
 object Main  {
 
   case class TodoItem(text: String, id: Long)
@@ -74,9 +74,14 @@ object Main  {
 
   def main(args: Array[String]): Unit ={
 
+    if (js.isUndefined(js.Dynamic.global.reactContainer)) {
+      js.Dynamic.global.reactContainer = document.createElement("div")
+      document.body.appendChild(js.Dynamic.global.reactContainer.asInstanceOf[html.Element])
+    }
+
     ReactDOM.render(
       div("Hello"),
-      dom.document.getElementById("root")
+      js.Dynamic.global.reactContainer.asInstanceOf[html.Element]
     )
   }
 }
