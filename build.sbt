@@ -64,7 +64,9 @@ lazy val frontend = (project in file("frontend")).settings(commonSettings).setti
 ).enablePlugins(ScalaJSPlugin,ScalaJSBundlerPlugin, ScalaJSWeb).
   dependsOn(sharedJs)
 
-lazy val shared = (crossProject.crossType(CrossType.Pure) in file("shared")).settings(commonSettings).settings(
+lazy val shared = (crossProject.crossType(CrossType.Pure) in file("shared"))
+  .settings(commonSettings)
+  .settings(
 
   libraryDependencies ++= Seq(
     "com.typesafe.play" %%% "play-json" % "2.6.9",
