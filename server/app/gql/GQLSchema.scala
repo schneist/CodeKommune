@@ -1,5 +1,5 @@
 package gql
-import domain.Task
+import shared.model.Task
 import repo.TaskRepository
 import sangria.macros.derive._
 

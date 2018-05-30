@@ -1,10 +1,6 @@
-package domain
-
+package shared.model
 import play.api.libs.json.Json
 
-/**
-  * Created by scsf on 03.03.2016.
-  */
 
 case class Task(
                  id: Option[String] = None,

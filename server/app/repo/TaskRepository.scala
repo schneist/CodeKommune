@@ -1,11 +1,9 @@
 package repo
 
+import com.sksamuel.elastic4s.http.HttpClient
 import com.sksamuel.elastic4s.{Indexable, RefreshPolicy}
-import com.sksamuel.elastic4s.http.search.SearchResponse
-import com.sksamuel.elastic4s.http.{HttpClient, RequestFailure, RequestSuccess}
-import domain.Task
 import play.api.libs.json.Json
-
+import shared.model._
 import scala.concurrent.{ExecutionContext, Future}
 
 /**

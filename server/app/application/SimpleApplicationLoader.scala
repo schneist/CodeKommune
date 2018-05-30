@@ -2,7 +2,7 @@ package application
 
 import com.sksamuel.elastic4s.http.HttpClient
 import controllers.EntriesController
-import domain.Task
+import shared.model.Task
 import play.api.ApplicationLoader.Context
 import play.api.mvc._
 import play.api.{ApplicationLoader, BuiltInComponentsFromContext, Configuration}
@@ -31,7 +31,8 @@ class Components(context: Context)
 
   implicit val components: Components = this
 
-  implicit  val tk = repositoryComponent.taskRepo
+  implicit val tk = repositoryComponent.taskRepo
+
   lazy val ec = new EntriesController()
 
   lazy val router = new Routes(httpErrorHandler,ec ,assets)

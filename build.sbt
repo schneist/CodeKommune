@@ -33,27 +33,35 @@ lazy val server = (project in file("server")).settings(commonSettings).settings(
     "com.vmunier" %% "scalajs-scripts" % "1.1.2",
   )
 
-).enablePlugins(PlayScala).
-  dependsOn(sharedJvm)
+).enablePlugins(PlayScala).enablePlugins(WebScalaJSBundlerPlugin).dependsOn(sharedJvm)
 
 
 
 lazy val frontend = (project in file("frontend")).settings(commonSettings).settings(
   scalaJSUseMainModuleInitializer := true,
+
+  // yes, we want to package JS dependencies
+  skip in packageJSDependencies := false,
+
   name := "frontend",
   libraryDependencies ++= Seq(
-    "org.scala-js" %%% "scalajs-dom" % "0.9.4"
+    "org.scala-js" %%% "scalajs-dom" % "0.9.5"
   ),
   scalacOptions += "-P:scalajs:sjsDefinedByDefault",
   libraryDependencies ++= Seq(
-    "me.shadaj" %%% "slinky-core" % "0.3.2",
-    "me.shadaj" %%% "slinky-web" % "0.3.2",
-    "me.shadaj" %%% "slinky-hot" % "0.3.2",
-    "me.shadaj" %%% "slinky-scalajsreact-interop" % "0.3.2",
+    "me.shadaj" %%% "slinky-core" % "0.4.2",
+    "me.shadaj" %%% "slinky-web" % "0.4.2",
+    "me.shadaj" %%% "slinky-hot" % "0.4.2",
+    "me.shadaj" %%% "slinky-scalajsreact-interop" % "0.4.2",
   ),
+
+  npmDependencies in Compile ++= Seq(
+    "react" -> "16.2.0",
+    "react-dom" -> "16.2.0"),
+
   addCompilerPlugin("org.scalameta" % "paradise" % "3.0.0-M11" cross CrossVersion.full),
 
-).enablePlugins(ScalaJSPlugin, ScalaJSWeb).
+).enablePlugins(ScalaJSPlugin,ScalaJSBundlerPlugin, ScalaJSWeb).
   dependsOn(sharedJs)
 
 lazy val shared = (crossProject.crossType(CrossType.Pure) in file("shared")).settings(commonSettings).settings(
