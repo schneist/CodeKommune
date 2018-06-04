@@ -1,5 +1,6 @@
 import org.scalajs.dom.raw.{Event, HTMLInputElement}
 import org.scalajs.dom.{document, html}
+import shared.model.Task
 import slinky.core._
 import slinky.core.annotations.react
 import slinky.web.ReactDOM
@@ -10,12 +11,14 @@ import scala.scalajs.js.Date
 
 object Main  {
 
-  case class TodoItem(text: String, id: Long)
-
+/*  val client = ApolloBoostClient(
+    uri = "https://w5xlvm3vzz.lp.gql.zone/graphql"
+  )
+*/
   @react
   class TodoApp extends Component {
     type Props = Unit
-    case class State(items: Seq[TodoItem], text: String)
+    case class State(items: Seq[Task], text: String)
 
     override def initialState = State(Seq.empty, "")
 
@@ -29,9 +32,8 @@ object Main  {
       e.preventDefault()
 
       if (state.text.nonEmpty) {
-        val newItem = TodoItem(
-          text = state.text,
-          id = Date.now().toLong
+        val newItem = Task(
+          name = state.text
         )
 
         setState(prevState => {
@@ -60,12 +62,12 @@ object Main  {
 
   @react
   class TodoList extends StatelessComponent {
-    case class Props(items: Seq[TodoItem])
+    case class Props(items: Seq[Task])
 
     override def render() = {
       ul(
         props.items.map { item =>
-          li(key := item.id.toString)(item.text)
+          li(key := item.id.toString)(item.name)
         }
       )
     }
@@ -80,7 +82,7 @@ object Main  {
     }
 
     ReactDOM.render(
-      div("Hello"),
+      TodoApp(),
       js.Dynamic.global.reactContainer.asInstanceOf[html.Element]
     )
   }

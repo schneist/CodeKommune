@@ -2,7 +2,7 @@ package controllers
 
 import akka.actor.ActorSystem
 import cats.implicits._
-import gql.TaskQueries
+import graphql.TaskQueries
 import play.api.libs.json.{JsObject, JsString, Json}
 import play.api.mvc.{Action, _}
 import repo.TaskRepository

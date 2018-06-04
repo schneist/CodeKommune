@@ -1,5 +1,5 @@
 import sbt.Keys.libraryDependencies
-
+import sbtcrossproject.CrossPlugin.autoImport.{crossProject, CrossType}
 resolvers ++= Seq(
   "Apollo Bintray" at "https://dl.bintray.com/apollographql/maven/",
   "Java.net Maven2 Repository" at "http://download.java.net/maven/2/",
@@ -13,13 +13,14 @@ resolvers ++= Seq(
 )
 
 
+
+
 lazy val server = (project in file("server")).settings(commonSettings).settings(
   scalaJSProjects := Seq(frontend),
   pipelineStages in Assets := Seq(scalaJSPipeline),
   pipelineStages := Seq(digest, gzip),
   // triggers scalaJSPipeline when using compile or continuous compilation
   compile in Compile := ((compile in Compile) dependsOn scalaJSPipeline).value,
-
 
 
   libraryDependencies ++= Seq(
@@ -33,8 +34,25 @@ lazy val server = (project in file("server")).settings(commonSettings).settings(
     "com.vmunier" %% "scalajs-scripts" % "1.1.2",
   )
 
-).enablePlugins(PlayScala).enablePlugins(WebScalaJSBundlerPlugin).dependsOn(sharedJvm)
+).enablePlugins(PlayScala).enablePlugins(WebScalaJSBundlerPlugin).dependsOn(sharedJvm).dependsOn(graphql)
 
+
+
+
+lazy val graphql = (project in file("graphql")).settings(commonSettings)
+  .settings(commonSettings)
+  .settings(
+
+    libraryDependencies ++= Seq(
+      "org.sangria-graphql" %% "sangria" % "1.4.1",
+      "org.sangria-graphql" %% "sangria-relay" % "1.4.1",
+    ),
+    graphqlSchemaSnippet := "graphql.TLSchema.tlschema",
+
+
+  )
+  .dependsOn(sharedJvm)
+  .enablePlugins(GraphQLSchemaPlugin, GraphQLQueryPlugin)
 
 
 lazy val frontend = (project in file("frontend")).settings(commonSettings).settings(
@@ -53,28 +71,32 @@ lazy val frontend = (project in file("frontend")).settings(commonSettings).setti
     "me.shadaj" %%% "slinky-web" % "0.4.2",
     "me.shadaj" %%% "slinky-hot" % "0.4.2",
     "me.shadaj" %%% "slinky-scalajsreact-interop" % "0.4.2",
+    "com.apollographql" %%% "apollo-scalajs-react" % "0.4.0+",
   ),
 
   npmDependencies in Compile ++= Seq(
     "react" -> "16.2.0",
-    "react-dom" -> "16.2.0"),
+    "react-dom" -> "16.2.0",
+    "react-apollo" -> "1.4.8"),
 
   addCompilerPlugin("org.scalameta" % "paradise" % "3.0.0-M11" cross CrossVersion.full),
 
-).enablePlugins(ScalaJSPlugin,ScalaJSBundlerPlugin, ScalaJSWeb).
-  dependsOn(sharedJs)
+).enablePlugins(ScalaJSPlugin,ScalaJSBundlerPlugin, ScalaJSWeb)
+  .dependsOn(sharedJs)
 
-lazy val shared = (crossProject.crossType(CrossType.Pure) in file("shared"))
+lazy val shared =  crossProject(JSPlatform, JVMPlatform)
+  .crossType(CrossType.Full)
+  .in(file("shared"))
   .settings(commonSettings)
   .settings(
-
-  libraryDependencies ++= Seq(
-    "com.typesafe.play" %%% "play-json" % "2.6.9",
-    "org.typelevel" %%% "cats-core" % "1.1.0",
-    "org.typelevel" %%% "cats-free" % "1.1.0",
-    "org.typelevel" %%% "cats-laws" % "1.1.0",
+    libraryDependencies ++= Seq(
+      "com.typesafe.play" %%% "play-json" % "2.6.9",
+      "org.typelevel" %%% "cats-core" % "1.1.0",
+      "org.typelevel" %%% "cats-free" % "1.1.0",
+      "org.typelevel" %%% "cats-laws" % "1.1.0",
+    ),
   )
-)
+
 lazy val sharedJvm = shared.jvm
 lazy val sharedJs = shared.js
 
