@@ -1,6 +1,6 @@
 import org.scalajs.dom.raw.{Event, HTMLInputElement}
 import org.scalajs.dom.{document, html}
-import shared.model.Task
+import model.Task
 import slinky.core._
 import slinky.core.annotations.react
 import slinky.web.ReactDOM

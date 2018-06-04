@@ -3,7 +3,7 @@ package repo
 import com.sksamuel.elastic4s.http.HttpClient
 import com.sksamuel.elastic4s.{Indexable, RefreshPolicy}
 import play.api.libs.json.Json
-import shared.model._
+import model._
 import scala.concurrent.{ExecutionContext, Future}
 
 /**

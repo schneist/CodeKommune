@@ -1,6 +1,6 @@
 package graphql
 
-import shared.model.Task
+import model.Task
 import repo.TaskRepository
 import sangria.macros.derive._
 

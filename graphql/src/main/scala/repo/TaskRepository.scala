@@ -1,5 +1,5 @@
 package repo
-import shared.model.Task
+import model.Task
 import scala.concurrent.Future
 
 /**

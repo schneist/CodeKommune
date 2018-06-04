@@ -2,7 +2,7 @@ package application
 
 import com.sksamuel.elastic4s.http.HttpClient
 import controllers.EntriesController
-import shared.model.Task
+import model.Task
 import play.api.ApplicationLoader.Context
 import play.api.mvc._
 import play.api.{ApplicationLoader, BuiltInComponentsFromContext, Configuration}

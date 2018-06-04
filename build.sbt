@@ -5,15 +5,10 @@ resolvers ++= Seq(
   "Java.net Maven2 Repository" at "http://download.java.net/maven/2/",
   "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
   "Sonatype OSS Public" at "https://oss.sonatype.org/content/repositories/public",
-  "Zeiss VSTS Repository" at "https://zeissgroup.pkgs.visualstudio.com/_packaging/SIP/maven/v1/",
   "JFrog" at "http://repo.jfrog.org/artifactory/libs-releases/",
   "JBoss" at "http://repository.jboss.org/nexus/content/groups/public-jboss/",
   "MVNSearch" at "http://www.mvnsearch.org/maven2/"
-
 )
-
-
-
 
 lazy val server = (project in file("server")).settings(commonSettings).settings(
   scalaJSProjects := Seq(frontend),
@@ -21,7 +16,6 @@ lazy val server = (project in file("server")).settings(commonSettings).settings(
   pipelineStages := Seq(digest, gzip),
   // triggers scalaJSPipeline when using compile or continuous compilation
   compile in Compile := ((compile in Compile) dependsOn scalaJSPipeline).value,
-
 
   libraryDependencies ++= Seq(
     "org.elasticsearch" % "elasticsearch" % "6.2.4",
@@ -34,10 +28,9 @@ lazy val server = (project in file("server")).settings(commonSettings).settings(
     "com.vmunier" %% "scalajs-scripts" % "1.1.2",
   )
 
-).enablePlugins(PlayScala).enablePlugins(WebScalaJSBundlerPlugin).dependsOn(sharedJvm).dependsOn(graphql)
-
-
-
+).enablePlugins(PlayScala)
+  .enablePlugins(WebScalaJSBundlerPlugin)
+  .dependsOn(graphql)
 
 lazy val graphql = (project in file("graphql")).settings(commonSettings)
   .settings(commonSettings)
@@ -48,10 +41,10 @@ lazy val graphql = (project in file("graphql")).settings(commonSettings)
       "org.sangria-graphql" %% "sangria-relay" % "1.4.1",
     ),
     graphqlSchemaSnippet := "graphql.TLSchema.tlschema",
-
+    //target in graphqlSchemaGen := target.value / "graphql-build-schema"
 
   )
-  .dependsOn(sharedJvm)
+  .dependsOn(communicationJS)
   .enablePlugins(GraphQLSchemaPlugin, GraphQLQueryPlugin)
 
 
@@ -82,12 +75,19 @@ lazy val frontend = (project in file("frontend")).settings(commonSettings).setti
   addCompilerPlugin("org.scalameta" % "paradise" % "3.0.0-M11" cross CrossVersion.full),
 
 ).enablePlugins(ScalaJSPlugin,ScalaJSBundlerPlugin, ScalaJSWeb)
-  .dependsOn(sharedJs)
+  .dependsOn(communicationJS)
 
-lazy val shared =  crossProject(JSPlatform, JVMPlatform)
+lazy val communicationJS = communication.js
+
+lazy val namespace = "codekommune"
+
+lazy val communication =  crossProject(JSPlatform, JVMPlatform)
   .crossType(CrossType.Full)
-  .in(file("shared"))
+  .in(file("communication"))
   .settings(commonSettings)
+  .settings(
+
+  )
   .settings(
     libraryDependencies ++= Seq(
       "com.typesafe.play" %%% "play-json" % "2.6.9",
@@ -95,10 +95,27 @@ lazy val shared =  crossProject(JSPlatform, JVMPlatform)
       "org.typelevel" %%% "cats-free" % "1.1.0",
       "org.typelevel" %%% "cats-laws" % "1.1.0",
     ),
+    (sourceGenerators in Compile) += Def.task {
+      import scala.sys.process._
+
+      val spath  = sourceDirectories.all(ScopeFilter(inProjects(LocalProject("graphql"))))
+
+      val out = (sourceManaged in Compile).value
+
+      out.mkdirs()
+
+      Seq(
+        "apollo-codegen", "generate", ((sourceDirectory in Compile).value / "graphql").getAbsolutePath + "/*.graphql",
+        "--schema", (baseDirectory.value / "schema.json").getAbsolutePath,
+        "--target", "scala",
+        "--namespace", namespace,
+        "--output", (out / "graphql.scala").getAbsolutePath
+      ).!
+      Seq(out / "graphql.scala")
+    }
   )
 
-lazy val sharedJvm = shared.jvm
-lazy val sharedJs = shared.js
+
 
 lazy val commonSettings = Seq(
   scalaVersion := "2.12.4",

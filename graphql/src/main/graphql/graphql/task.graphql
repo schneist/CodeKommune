@@ -1,6 +1,0 @@
-query Task($id: Int!) {
-  author(id: $id) {
-    firstName
-    lastName
-  }
-}
