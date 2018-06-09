@@ -1,5 +1,5 @@
-import sbt.Keys.libraryDependencies
-import sbtcrossproject.CrossPlugin.autoImport.{crossProject, CrossType}
+import sbtcrossproject.CrossPlugin.autoImport.{CrossType, crossProject}
+
 resolvers ++= Seq(
   "Apollo Bintray" at "https://dl.bintray.com/apollographql/maven/",
   "Java.net Maven2 Repository" at "http://download.java.net/maven/2/",
@@ -9,6 +9,7 @@ resolvers ++= Seq(
   "JBoss" at "http://repository.jboss.org/nexus/content/groups/public-jboss/",
   "MVNSearch" at "http://www.mvnsearch.org/maven2/"
 )
+
 
 lazy val server = (project in file("server")).settings(commonSettings).settings(
   scalaJSProjects := Seq(frontend),
@@ -30,23 +31,7 @@ lazy val server = (project in file("server")).settings(commonSettings).settings(
 
 ).enablePlugins(PlayScala)
   .enablePlugins(WebScalaJSBundlerPlugin)
-  .dependsOn(graphql)
-
-lazy val graphql = (project in file("graphql")).settings(commonSettings)
-  .settings(commonSettings)
-  .settings(
-
-    libraryDependencies ++= Seq(
-      "org.sangria-graphql" %% "sangria" % "1.4.1",
-      "org.sangria-graphql" %% "sangria-relay" % "1.4.1",
-    ),
-    graphqlSchemaSnippet := "graphql.TLSchema.tlschema",
-    //target in graphqlSchemaGen := target.value / "graphql-build-schema"
-
-  )
-  .dependsOn(communicationJS)
-  .enablePlugins(GraphQLSchemaPlugin, GraphQLQueryPlugin)
-
+  .dependsOn(commonJVM)
 
 lazy val frontend = (project in file("frontend")).settings(commonSettings).settings(
   scalaJSUseMainModuleInitializer := true,
@@ -75,45 +60,54 @@ lazy val frontend = (project in file("frontend")).settings(commonSettings).setti
   addCompilerPlugin("org.scalameta" % "paradise" % "3.0.0-M11" cross CrossVersion.full),
 
 ).enablePlugins(ScalaJSPlugin,ScalaJSBundlerPlugin, ScalaJSWeb)
-  .dependsOn(communicationJS)
+  .dependsOn(commonJS)
 
-lazy val communicationJS = communication.js
 
-lazy val namespace = "codekommune"
-
-lazy val communication =  crossProject(JSPlatform, JVMPlatform)
+lazy val common =  crossProject(JSPlatform, JVMPlatform)
   .crossType(CrossType.Full)
-  .in(file("communication"))
+  .in(file("common"))
   .settings(commonSettings)
-  .settings(
-
-  )
   .settings(
     libraryDependencies ++= Seq(
       "com.typesafe.play" %%% "play-json" % "2.6.9",
       "org.typelevel" %%% "cats-core" % "1.1.0",
       "org.typelevel" %%% "cats-free" % "1.1.0",
       "org.typelevel" %%% "cats-laws" % "1.1.0",
-    ),
-    (sourceGenerators in Compile) += Def.task {
-      import scala.sys.process._
+    )
 
-      val spath  = sourceDirectories.all(ScopeFilter(inProjects(LocalProject("graphql"))))
-
-      val out = (sourceManaged in Compile).value
-
-      out.mkdirs()
-
-      Seq(
-        "apollo-codegen", "generate", ((sourceDirectory in Compile).value / "graphql").getAbsolutePath + "/*.graphql",
-        "--schema", (baseDirectory.value / "schema.json").getAbsolutePath,
-        "--target", "scala",
-        "--namespace", namespace,
-        "--output", (out / "graphql.scala").getAbsolutePath
-      ).!
-      Seq(out / "graphql.scala")
-    }
   )
+  .jvmSettings(
+  libraryDependencies ++= Seq(
+    "org.sangria-graphql" %% "sangria" % "1.4.1",
+    "org.sangria-graphql" %% "sangria-relay" % "1.4.1",
+    "org.sangria-graphql" %% "sangria-play-json" % "1.0.4",
+  ),
+)
+
+
+lazy val commonJS :Project = common.js
+
+lazy val commonJVM :Project = common.jvm
+
+
+
+
+lazy val communication =  (project in file("communication"))
+  .settings(commonSettings)
+  .dependsOn(commonJVM)
+  .settings(
+    libraryDependencies ++= Seq(
+      "org.sangria-graphql" %% "sangria" % "1.4.1",
+      "org.sangria-graphql" %% "sangria-relay" % "1.4.1",
+      "org.sangria-graphql" %% "sangria-play-json" % "1.0.4",
+    ),
+    graphqlSchemaSnippet := "gql.TLSchema.tlschema",
+    graphqlSchemaOutputFileType := "json",
+    target in graphqlSchemaGen := baseDirectory.value
+  )
+  .enablePlugins(GraphQLSchemaPlugin, GraphQLQueryPlugin)
+
+
 
 
 
@@ -124,5 +118,5 @@ lazy val commonSettings = Seq(
 )
 
 // loads the server project at sbt startup - if client project is wanted switch to "project client"
-onLoad in Global := (onLoad in Global).value andThen {s: State => "project server" :: s}
+// onLoad in Global := (onLoad in Global).value andThen {s: State => "project server" :: s}
 

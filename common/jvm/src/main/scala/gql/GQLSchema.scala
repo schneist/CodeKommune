@@ -1,4 +1,4 @@
-package graphql
+package gql
 
 import model.Task
 import repo.TaskRepository

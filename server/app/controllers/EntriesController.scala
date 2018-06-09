@@ -1,10 +1,8 @@
 package controllers
 
-import akka.actor.ActorSystem
-import cats.implicits._
-import graphql.TaskQueries
+import gql.TLSchema
 import play.api.libs.json.{JsObject, JsString, Json}
-import play.api.mvc.{Action, _}
+import play.api.mvc._
 import repo.TaskRepository
 import sangria.ast.Document
 import sangria.execution._
@@ -27,7 +25,7 @@ class EntriesController (implicit exec: ExecutionContext,
     Ok(views.html.index(""))
   }
   def renderSchema = Action {
-    Ok(SchemaRenderer.renderSchema(TaskQueries.schema))
+    Ok(SchemaRenderer.renderSchema(TLSchema.tlschema))
   }
 
 
@@ -57,7 +55,7 @@ class EntriesController (implicit exec: ExecutionContext,
   }
 
   def executeGraphQLQuery(query: Document, op: Option[String], vars: JsObject) =
-    Executor.execute(TaskQueries.schema, query,taskRepo, operationName = op, variables = vars)
+    Executor.execute(TLSchema.tlschema, query,taskRepo, operationName = op, variables = vars)
       .map(Ok(_))
       .recover {
         case error: QueryAnalysisError ⇒ BadRequest(error.resolveError)

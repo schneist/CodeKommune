@@ -1,4 +1,4 @@
-package graphql
+package gql
 
 import repo.TaskRepository
 import sangria.schema._
@@ -18,5 +18,5 @@ object TLSchema {
     )
   )
 
-  val tlschema = Schema(QueryType)
+  val tlschema :Schema[TaskRepository, Unit] = Schema(QueryType)
 }
