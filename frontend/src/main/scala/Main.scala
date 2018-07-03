@@ -1,3 +1,4 @@
+import com.apollographql.scalajs.{ApolloBoostClient, UpVote}
 import org.scalajs.dom.raw.{Event, HTMLInputElement}
 import org.scalajs.dom.{document, html}
 import model.Task
@@ -8,13 +9,11 @@ import slinky.web.html._
 
 import scala.scalajs.js
 import scala.scalajs.js.Date
-
+import com.apollographql.scalajs.react.{ApolloProvider, Query}
+import slinky.core.facade.ReactElement
 object Main  {
 
-/*  val client = ApolloBoostClient(
-    uri = "https://w5xlvm3vzz.lp.gql.zone/graphql"
-  )
-*/
+
   @react
   class TodoApp extends Component {
     type Props = Unit
@@ -62,9 +61,25 @@ object Main  {
 
   @react
   class TodoList extends StatelessComponent {
-    case class Props(items: Seq[Task])
+    case class Props()
 
-    override def render() = {
+
+
+    def render(): ReactElement = {
+      Query(QueryT) { res =>
+        res.data.map { d =>
+
+          ul(
+            d.items.map { item =>
+              li(key := item.id.toString)(item.name)
+            }
+          )
+
+
+      }
+    }
+
+    override def render2() = {
       ul(
         props.items.map { item =>
           li(key := item.id.toString)(item.name)
@@ -86,4 +101,8 @@ object Main  {
       js.Dynamic.global.reactContainer.asInstanceOf[html.Element]
     )
   }
+
+  val client = ApolloBoostClient(
+    uri = "https://1jzxrj179.lp.gql.zone/graphql"
+  )
 }

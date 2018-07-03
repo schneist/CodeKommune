@@ -2,15 +2,13 @@ package application
 
 import com.sksamuel.elastic4s.http.HttpClient
 import controllers.EntriesController
-import model.Task
 import play.api.ApplicationLoader.Context
 import play.api.mvc._
 import play.api.{ApplicationLoader, BuiltInComponentsFromContext, Configuration}
 import play.filters.HttpFiltersComponents
-import repo.TaskRepository
+import repo.InMemoryTaskRepo
 import router.Routes
-
-import scala.concurrent.Future
+import scala.concurrent.ExecutionContext
 
 /**
   * Created by stefan.schneider on 31.10.2016.
@@ -27,7 +25,7 @@ class Components(context: Context)
     with ControllerComponents
     with controllers.AssetsComponents {
 
-  val repositoryComponent = new RepositoryComponent(configuration )
+  val repositoryComponent = new RepositoryComponent(configuration )(executionContext)
 
   implicit val components: Components = this
 
@@ -45,18 +43,9 @@ class Components(context: Context)
 }
 
 
-class RepositoryComponent(configuration: Configuration) {
+class RepositoryComponent(configuration: Configuration)(implicit val ec:ExecutionContext) {
 
   val client = HttpClient.apply(configuration.get[String]("elasticsearch.connection"))
 
-  val taskRepo = new TaskRepository
-  {
-    override def searchTask(query: String): Future[List[Task]] = Future.successful(List.empty)
-
-    override def deleteTask(id: String): Future[Boolean] = ???
-
-    override def addTask(task: Task): Future[Task] = ???
-
-    override def getTask(id: String): Future[Task] = ???
-  }
+  val taskRepo = new InMemoryTaskRepo
 }

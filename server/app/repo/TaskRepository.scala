@@ -1,27 +1,35 @@
 package repo
 
+import java.util.UUID
+
 import com.sksamuel.elastic4s.http.HttpClient
 import com.sksamuel.elastic4s.{Indexable, RefreshPolicy}
 import play.api.libs.json.Json
 import model._
+
+import scala.collection.mutable
 import scala.concurrent.{ExecutionContext, Future}
 
 /**
   * Created by stefan.schneider on 11.10.2016.
   */
-trait TaskRepository {
 
-  def searchTask(query: String) : Future[Seq[Task]]
+class InMemoryTaskRepo( implicit val ec:ExecutionContext) extends TaskRepository[Future] {
 
-  def deleteTask(id: String) : Future[Boolean]
+  val taskList = new mutable.HashMap[String,Task]()
 
-  def addTask(task:Task) : Future[Task]
+  override def searchTask(query: String): Future[Seq[Task]] = Future.apply{
+    taskList.keys.filter(_.contains(query)).map(taskList.get).map(_.get).toSeq
+  }
 
-  def getTask(id:String) :Future[Task]
+  override def deleteTask(id: String): Future[Unit] = Future.apply(taskList.remove(id))
 
+  override def addTask(task: Task): Future[Task] = Future.apply(taskList.put(task.id.getOrElse(UUID.randomUUID().toString),task).get)
+
+  override def getTask(id: String): Future[Option[Task]] = Future.apply(taskList.get(id))
 }
 
-class ElasticClientTaskRepository(val indexName:String,implicit val httpClient: HttpClient,implicit val ec:ExecutionContext) extends TaskRepository{
+class ElasticClientTaskRepository(val indexName:String,implicit val httpClient: HttpClient,implicit val ec:ExecutionContext) extends TaskRepository[Future]{
   import com.sksamuel.elastic4s.http.ElasticDsl._
 
   override def searchTask(querys: String): Future[Seq[Task]] = {
@@ -38,7 +46,7 @@ class ElasticClientTaskRepository(val indexName:String,implicit val httpClient: 
     })
   }
 
-  override def deleteTask(id: String): Future[Boolean] = {
+  override def deleteTask(id: String): Future[Unit] = {
     httpClient.execute {
       delete("u2").from("bands/rock")
     }.flatMap(a => a match{
@@ -48,9 +56,11 @@ class ElasticClientTaskRepository(val indexName:String,implicit val httpClient: 
 
   }
 
-  override def addTask(task: Task): Future[Task] = ???
+  override def addTask(task: Task): Future[Task] = {
+   ???
+  }
 
-  override def getTask(id: String): Future[Task] = ???
+  override def getTask(id: String): Future[Option[Task]] = ???
 
   def initIndex ={
     httpClient.execute(

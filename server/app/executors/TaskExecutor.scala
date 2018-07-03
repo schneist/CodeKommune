@@ -2,8 +2,12 @@ package executors
 
 import repo.TaskRepository
 
-class TaskExecutor(implicit val taskRepository: TaskRepository){
+import scala.concurrent.Future
+
+class TaskExecutor(implicit val taskRepository: TaskRepository[Future]){
 
 
 
 }
+
+

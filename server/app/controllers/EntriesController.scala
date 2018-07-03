@@ -18,7 +18,7 @@ import scala.util.{Failure, Success}
   */
 class EntriesController (implicit exec: ExecutionContext,
                          cc: ControllerComponents,
-                         taskRepo:TaskRepository
+                         taskRepo:TaskRepository[Future]
                         )extends AbstractController(cc){
 
   def index = Action {

@@ -1,3 +1,4 @@
+import rocks.muki.graphql.codegen.CodeGenStyles
 import sbtcrossproject.CrossPlugin.autoImport.{CrossType, crossProject}
 
 resolvers ++= Seq(
@@ -41,25 +42,29 @@ lazy val frontend = (project in file("frontend")).settings(commonSettings).setti
 
   name := "frontend",
   libraryDependencies ++= Seq(
-    "org.scala-js" %%% "scalajs-dom" % "0.9.5"
+    "org.scala-js" %%% "scalajs-dom" % "0.9.6"
   ),
   scalacOptions += "-P:scalajs:sjsDefinedByDefault",
   libraryDependencies ++= Seq(
-    "me.shadaj" %%% "slinky-core" % "0.4.2",
-    "me.shadaj" %%% "slinky-web" % "0.4.2",
-    "me.shadaj" %%% "slinky-hot" % "0.4.2",
-    "me.shadaj" %%% "slinky-scalajsreact-interop" % "0.4.2",
+    "me.shadaj" %%% "slinky-core" % "0.4.3",
+    "me.shadaj" %%% "slinky-web" % "0.4.3",
+    "me.shadaj" %%% "slinky-hot" % "0.4.3",
+    "me.shadaj" %%% "slinky-scalajsreact-interop" % "0.4.3",
     "com.apollographql" %%% "apollo-scalajs-react" % "0.4.0+",
   ),
 
   npmDependencies in Compile ++= Seq(
     "react" -> "16.2.0",
     "react-dom" -> "16.2.0",
-    "react-apollo" -> "1.4.8"),
+    "react-apollo" -> "2.1.0",
+    "apollo-boost" -> "0.1.3",
+    "graphql-tag" -> "2.8.0",
+    "graphql" -> "0.13.2"
+  ),
 
   addCompilerPlugin("org.scalameta" % "paradise" % "3.0.0-M11" cross CrossVersion.full),
 
-).enablePlugins(ScalaJSPlugin,ScalaJSBundlerPlugin, ScalaJSWeb)
+).enablePlugins(ScalaJSPlugin,ScalaJSBundlerPlugin, ScalaJSWeb, GraphQLCodegenPlugin)
   .dependsOn(commonJS)
 
 
@@ -76,6 +81,7 @@ lazy val common =  crossProject(JSPlatform, JVMPlatform)
     )
 
   )
+  .enablePlugins(GraphQLSchemaPlugin)
   .jvmSettings(
   libraryDependencies ++= Seq(
     "org.sangria-graphql" %% "sangria" % "1.4.1",
@@ -90,22 +96,6 @@ lazy val commonJS :Project = common.js
 lazy val commonJVM :Project = common.jvm
 
 
-
-
-lazy val communication =  (project in file("communication"))
-  .settings(commonSettings)
-  .dependsOn(commonJVM)
-  .settings(
-    libraryDependencies ++= Seq(
-      "org.sangria-graphql" %% "sangria" % "1.4.1",
-      "org.sangria-graphql" %% "sangria-relay" % "1.4.1",
-      "org.sangria-graphql" %% "sangria-play-json" % "1.0.4",
-    ),
-    graphqlSchemaSnippet := "gql.TLSchema.tlschema",
-    graphqlSchemaOutputFileType := "json",
-    target in graphqlSchemaGen := baseDirectory.value
-  )
-  .enablePlugins(GraphQLSchemaPlugin, GraphQLQueryPlugin)
 
 
 
