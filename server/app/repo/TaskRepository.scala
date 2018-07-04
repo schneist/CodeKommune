@@ -51,7 +51,7 @@ class ElasticClientTaskRepository(val indexName:String,implicit val httpClient: 
       delete("u2").from("bands/rock")
     }.flatMap(a => a match{
       case Left(e) => Future.failed(new Exception(e.toString))
-      case Right(_)  => Future.successful(true)
+      case Right(_)  => Future.successful( )
     })
 
   }

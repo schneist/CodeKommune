@@ -18,7 +18,7 @@ lazy val server = (project in file("server")).settings(commonSettings).settings(
   pipelineStages := Seq(digest, gzip),
   // triggers scalaJSPipeline when using compile or continuous compilation
   compile in Compile := ((compile in Compile) dependsOn scalaJSPipeline).value,
-
+  graphqlSchemaSnippet := "gql.TLSchema.tlschema",
   libraryDependencies ++= Seq(
     "org.elasticsearch" % "elasticsearch" % "6.2.4",
     "com.sksamuel.elastic4s" %% "elastic4s-core" % "6.2.9",
@@ -30,8 +30,7 @@ lazy val server = (project in file("server")).settings(commonSettings).settings(
     "com.vmunier" %% "scalajs-scripts" % "1.1.2",
   )
 
-).enablePlugins(PlayScala)
-  .enablePlugins(WebScalaJSBundlerPlugin)
+).enablePlugins(PlayScala, WebScalaJSBundlerPlugin, GraphQLSchemaPlugin)
   .dependsOn(commonJVM)
 
 lazy val frontend = (project in file("frontend")).settings(commonSettings).settings(
@@ -64,7 +63,7 @@ lazy val frontend = (project in file("frontend")).settings(commonSettings).setti
 
   addCompilerPlugin("org.scalameta" % "paradise" % "3.0.0-M11" cross CrossVersion.full),
 
-).enablePlugins(ScalaJSPlugin,ScalaJSBundlerPlugin, ScalaJSWeb, GraphQLCodegenPlugin)
+).enablePlugins(ScalaJSPlugin,ScalaJSBundlerPlugin, ScalaJSWeb)
   .dependsOn(commonJS)
 
 
@@ -78,10 +77,11 @@ lazy val common =  crossProject(JSPlatform, JVMPlatform)
       "org.typelevel" %%% "cats-core" % "1.1.0",
       "org.typelevel" %%% "cats-free" % "1.1.0",
       "org.typelevel" %%% "cats-laws" % "1.1.0",
-    )
+    ),
+
 
   )
-  .enablePlugins(GraphQLSchemaPlugin)
+
   .jvmSettings(
   libraryDependencies ++= Seq(
     "org.sangria-graphql" %% "sangria" % "1.4.1",

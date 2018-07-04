@@ -1,4 +1,4 @@
-import com.apollographql.scalajs.{ApolloBoostClient, UpVote}
+import com.apollographql.scalajs.{ApolloBoostClient}
 import org.scalajs.dom.raw.{Event, HTMLInputElement}
 import org.scalajs.dom.{document, html}
 import model.Task
@@ -47,7 +47,7 @@ object Main  {
     override def render() = {
       div(
         h3("TODO"),
-        TodoList(items = state.items),
+        TodoList(),
         form(onSubmit := handleSubmit _)(
           input(
             onChange := handleChange _,
@@ -66,26 +66,17 @@ object Main  {
 
 
     def render(): ReactElement = {
-      Query(QueryT) { res =>
-        res.data.map { d =>
-
-          ul(
-            d.items.map { item =>
-              li(key := item.id.toString)(item.name)
-            }
-          )
-
-
-      }
+    ul()
     }
-
-    override def render2() = {
+/**
+    override def render() = {
       ul(
         props.items.map { item =>
           li(key := item.id.toString)(item.name)
         }
       )
     }
+  **/
   }
 
 
