@@ -1,4 +1,3 @@
-import rocks.muki.graphql.codegen.CodeGenStyles
 import sbtcrossproject.CrossPlugin.autoImport.{CrossType, crossProject}
 
 resolvers ++= Seq(
@@ -18,7 +17,6 @@ lazy val server = (project in file("server")).settings(commonSettings).settings(
   pipelineStages := Seq(digest, gzip),
   // triggers scalaJSPipeline when using compile or continuous compilation
   compile in Compile := ((compile in Compile) dependsOn scalaJSPipeline).value,
-  graphqlSchemaSnippet := "gql.TLSchema.tlschema",
   libraryDependencies ++= Seq(
     "org.elasticsearch" % "elasticsearch" % "6.2.4",
     "com.sksamuel.elastic4s" %% "elastic4s-core" % "6.2.9",
@@ -30,7 +28,7 @@ lazy val server = (project in file("server")).settings(commonSettings).settings(
     "com.vmunier" %% "scalajs-scripts" % "1.1.2",
   )
 
-).enablePlugins(PlayScala, WebScalaJSBundlerPlugin, GraphQLSchemaPlugin)
+).enablePlugins(PlayScala, WebScalaJSBundlerPlugin)
   .dependsOn(commonJVM)
 
 lazy val frontend = (project in file("frontend")).settings(commonSettings).settings(
@@ -49,9 +47,18 @@ lazy val frontend = (project in file("frontend")).settings(commonSettings).setti
     "me.shadaj" %%% "slinky-web" % "0.4.3",
     "me.shadaj" %%% "slinky-hot" % "0.4.3",
     "me.shadaj" %%% "slinky-scalajsreact-interop" % "0.4.3",
-    "com.apollographql" %%% "apollo-scalajs-react" % "0.4.0+",
+    "com.apollographql" %%% "apollo-scalajs-react" % "0.4.0",
   ),
 
+  resolvers ++= Seq(
+    "Apollo Bintray" at "https://dl.bintray.com/apollographql/maven/",
+    "Java.net Maven2 Repository" at "http://download.java.net/maven/2/",
+    "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
+    "Sonatype OSS Public" at "https://oss.sonatype.org/content/repositories/public",
+    "JFrog" at "http://repo.jfrog.org/artifactory/libs-releases/",
+    "JBoss" at "http://repository.jboss.org/nexus/content/groups/public-jboss/",
+    "MVNSearch" at "http://www.mvnsearch.org/maven2/"
+  ),
   npmDependencies in Compile ++= Seq(
     "react" -> "16.2.0",
     "react-dom" -> "16.2.0",
@@ -81,7 +88,22 @@ lazy val common =  crossProject(JSPlatform, JVMPlatform)
 
 
   )
+  .jsSettings(
+    libraryDependencies ++= Seq(
+      "com.apollographql" %%% "apollo-scalajs-react" % "0.4.0",
+    ),
 
+    resolvers ++= Seq(
+      "Apollo Bintray" at "https://dl.bintray.com/apollographql/maven/",
+      "Java.net Maven2 Repository" at "http://download.java.net/maven/2/",
+      "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
+      "Sonatype OSS Public" at "https://oss.sonatype.org/content/repositories/public",
+      "JFrog" at "http://repo.jfrog.org/artifactory/libs-releases/",
+      "JBoss" at "http://repository.jboss.org/nexus/content/groups/public-jboss/",
+      "MVNSearch" at "http://www.mvnsearch.org/maven2/"
+    )
+
+  )
   .jvmSettings(
   libraryDependencies ++= Seq(
     "org.sangria-graphql" %% "sangria" % "1.4.1",

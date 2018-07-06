@@ -13,6 +13,9 @@ import com.apollographql.scalajs.react.{ApolloProvider, Query}
 import slinky.core.facade.ReactElement
 object Main  {
 
+  val client = ApolloBoostClient(
+    uri = "https://localhost:9000/graphql"
+  )
 
   @react
   class TodoApp extends Component {
@@ -45,15 +48,17 @@ object Main  {
     }
 
     override def render() = {
-      div(
-        h3("TODO"),
-        TodoList(),
-        form(onSubmit := handleSubmit _)(
-          input(
-            onChange := handleChange _,
-            value := state.text
-          ),
-          button(s"Add #${state.items.size + 1}")
+      ApolloProvider(client)(
+        div(
+          h3("TODO"),
+          TodoList(),
+          form(onSubmit := handleSubmit _)(
+            input(
+              onChange := handleChange _,
+              value := state.text
+            ),
+            button(s"Add #${state.items.size + 1}")
+          )
         )
       )
     }
@@ -66,9 +71,15 @@ object Main  {
 
 
     def render(): ReactElement = {
-    ul()
+      Query(TaskQuery, TaskQuery.Variables("n1"))  {
+        _.data.map { d =>
+          div(
+            d.toString
+          )
+        }.getOrElse(h1("loading!"))
+      }
     }
-/**
+    /**
     override def render() = {
       ul(
         props.items.map { item =>
@@ -76,7 +87,7 @@ object Main  {
         }
       )
     }
-  **/
+      **/
   }
 
 
@@ -93,7 +104,5 @@ object Main  {
     )
   }
 
-  val client = ApolloBoostClient(
-    uri = "https://1jzxrj179.lp.gql.zone/graphql"
-  )
+
 }

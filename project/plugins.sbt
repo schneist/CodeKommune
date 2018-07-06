@@ -11,9 +11,9 @@ resolvers += Resolver.sbtPluginRepo("releases")
 resolvers += "Typesafe repository MAven" at "https://repo.typesafe.com/typesafe/maven-releases/"
 
 // Use the Play sbt plugin for Play projects
-addSbtPlugin ("com.typesafe.play" % "sbt-plugin" % "2.6.13" )
+addSbtPlugin ("com.typesafe.play" % "sbt-plugin" % "2.6.15" )
 
-addSbtPlugin("org.scala-js" % "sbt-scalajs" % "0.6.23")
+addSbtPlugin("org.scala-js" % "sbt-scalajs" % "0.6.24")
 
 addSbtPlugin("com.timushev.sbt" % "sbt-updates" % "0.3.4")
 
@@ -38,4 +38,3 @@ addSbtPlugin("com.typesafe.sbt" % "sbt-jshint" % "1.0.6")
 addSbtPlugin("com.typesafe.sbt" % "sbt-rjs" % "1.0.10" )
 addSbtPlugin("com.typesafe.sbt" % "sbt-mocha" % "1.1.2")
 addSbtPlugin("org.portable-scala" % "sbt-scalajs-crossproject"      % "0.4.0")
-addSbtPlugin("rocks.muki" % "sbt-graphql" % "0.6.0")

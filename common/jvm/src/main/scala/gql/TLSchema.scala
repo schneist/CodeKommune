@@ -41,7 +41,7 @@ object TLSchema {
     }
   )
 
-  val MutationType = ObjectType("Mutation", fields[TaskRepository[Future], Unit](taskMutation))
+  val MutationType = ObjectType("taskMutation", fields[TaskRepository[Future], Unit](taskMutation))
 
   val tlschema :Schema[TaskRepository[Future], Unit] =  Schema(QueryType, Some(MutationType))
 }

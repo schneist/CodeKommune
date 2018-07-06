@@ -19,12 +19,16 @@ class InMemoryTaskRepo( implicit val ec:ExecutionContext) extends TaskRepository
   val taskList = new mutable.HashMap[String,Task]()
 
   override def searchTask(query: String): Future[Seq[Task]] = Future.apply{
-    taskList.keys.filter(_.contains(query)).map(taskList.get).map(_.get).toSeq
+    taskList.values.filter(_.name.contains(query)).toSeq
   }
 
   override def deleteTask(id: String): Future[Unit] = Future.apply(taskList.remove(id))
 
-  override def addTask(task: Task): Future[Task] = Future.apply(taskList.put(task.id.getOrElse(UUID.randomUUID().toString),task).get)
+  override def addTask(task: Task): Future[Task] = Future.apply {
+    val taskWithID = task.copy(id = Some(task.id.getOrElse(UUID.randomUUID().toString)))
+    taskList.put(taskWithID.id.get, taskWithID)
+    taskWithID
+  }
 
   override def getTask(id: String): Future[Option[Task]] = Future.apply(taskList.get(id))
 }
@@ -51,7 +55,7 @@ class ElasticClientTaskRepository(val indexName:String,implicit val httpClient: 
       delete("u2").from("bands/rock")
     }.flatMap(a => a match{
       case Left(e) => Future.failed(new Exception(e.toString))
-      case Right(_)  => Future.successful( )
+      case Right(_)  => Future.successful()
     })
 
   }
