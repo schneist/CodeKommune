@@ -51,7 +51,7 @@ object Main  {
       ApolloProvider(client)(
         div(
           h3("TODO"),
-          TodoList(),
+          //TodoList,
           form(onSubmit := handleSubmit _)(
             input(
               onChange := handleChange _,

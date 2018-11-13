@@ -1,4 +1,4 @@
-import sbtcrossproject.CrossPlugin.autoImport.{CrossType, crossProject}
+  import sbtcrossproject.CrossPlugin.autoImport.{CrossType, crossProject}
 
 resolvers ++= Seq(
   "Apollo Bintray" at "https://dl.bintray.com/apollographql/maven/",
@@ -43,11 +43,11 @@ lazy val frontend = (project in file("frontend")).settings(commonSettings).setti
   ),
   scalacOptions += "-P:scalajs:sjsDefinedByDefault",
   libraryDependencies ++= Seq(
-    "me.shadaj" %%% "slinky-core" % "0.4.3",
-    "me.shadaj" %%% "slinky-web" % "0.4.3",
-    "me.shadaj" %%% "slinky-hot" % "0.4.3",
-    "me.shadaj" %%% "slinky-scalajsreact-interop" % "0.4.3",
-    "com.apollographql" %%% "apollo-scalajs-react" % "0.4.0",
+    "me.shadaj" %%% "slinky-core" % "0.5.1",
+    "me.shadaj" %%% "slinky-web" % "0.5.1",
+    "me.shadaj" %%% "slinky-hot" % "0.5.1",
+    "me.shadaj" %%% "slinky-scalajsreact-interop" % "0.5.1",
+    "com.apollographql" %%% "apollo-scalajs-react" % "0.4.3",
   ),
 
   resolvers ++= Seq(
@@ -61,7 +61,7 @@ lazy val frontend = (project in file("frontend")).settings(commonSettings).setti
   ),
   npmDependencies in Compile ++= Seq(
     "react" -> "16.2.0",
-    "react-dom" -> "16.2.0",
+    "react-dom" -> "16.4.2",
     "react-apollo" -> "2.1.0",
     "apollo-boost" -> "0.1.3",
     "graphql-tag" -> "2.8.0",
@@ -81,9 +81,9 @@ lazy val common =  crossProject(JSPlatform, JVMPlatform)
   .settings(
     libraryDependencies ++= Seq(
       "com.typesafe.play" %%% "play-json" % "2.6.9",
-      "org.typelevel" %%% "cats-core" % "1.1.0",
-      "org.typelevel" %%% "cats-free" % "1.1.0",
-      "org.typelevel" %%% "cats-laws" % "1.1.0",
+      "org.typelevel" %%% "cats-core" % "1.4.0",
+      "org.typelevel" %%% "cats-free" % "1.4.0",
+      "org.typelevel" %%% "cats-laws" % "1.4.0",
     ),
 
 
@@ -106,9 +106,9 @@ lazy val common =  crossProject(JSPlatform, JVMPlatform)
   )
   .jvmSettings(
   libraryDependencies ++= Seq(
-    "org.sangria-graphql" %% "sangria" % "1.4.1",
-    "org.sangria-graphql" %% "sangria-relay" % "1.4.1",
-    "org.sangria-graphql" %% "sangria-play-json" % "1.0.4",
+    "org.sangria-graphql" %% "sangria" % "1.4.2",
+    "org.sangria-graphql" %% "sangria-relay" % "1.4.2",
+    "org.sangria-graphql" %% "sangria-play-json" % "1.0.5",
   ),
 )
 
@@ -124,7 +124,7 @@ lazy val commonJVM :Project = common.jvm
 
 
 lazy val commonSettings = Seq(
-  scalaVersion := "2.12.4",
+  scalaVersion := "2.12.7",
   version := "1.0-" + new java.util.Date().getTime,
 
 )
