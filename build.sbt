@@ -60,8 +60,8 @@ lazy val frontend = (project in file("frontend")).settings(commonSettings).setti
     "MVNSearch" at "http://www.mvnsearch.org/maven2/"
   ),
   npmDependencies in Compile ++= Seq(
-    "react" -> "16.2.0",
-    "react-dom" -> "16.4.2",
+    "react" -> "16.6.3",
+    "react-dom" -> "16.6.3",
     "react-apollo" -> "2.1.0",
     "apollo-boost" -> "0.1.3",
     "graphql-tag" -> "2.8.0",
