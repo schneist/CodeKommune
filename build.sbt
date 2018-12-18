@@ -1,4 +1,4 @@
-  import sbtcrossproject.CrossPlugin.autoImport.{CrossType, crossProject}
+import sbtcrossproject.CrossPlugin.autoImport.{CrossType, crossProject}
 
 resolvers ++= Seq(
   "Apollo Bintray" at "https://dl.bintray.com/apollographql/maven/",
@@ -105,12 +105,12 @@ lazy val common =  crossProject(JSPlatform, JVMPlatform)
 
   )
   .jvmSettings(
-  libraryDependencies ++= Seq(
-    "org.sangria-graphql" %% "sangria" % "1.4.2",
-    "org.sangria-graphql" %% "sangria-relay" % "1.4.2",
-    "org.sangria-graphql" %% "sangria-play-json" % "1.0.5",
-  ),
-)
+    libraryDependencies ++= Seq(
+      "org.sangria-graphql" %% "sangria" % "1.4.2",
+      "org.sangria-graphql" %% "sangria-relay" % "1.4.2",
+      "org.sangria-graphql" %% "sangria-play-json" % "1.0.5",
+    ),
+  ).enablePlugins(GitVersioning)
 
 
 lazy val commonJS :Project = common.js
@@ -120,15 +120,11 @@ lazy val commonJVM :Project = common.jvm
 
 
 
-
-
-
 lazy val commonSettings = Seq(
   scalaVersion := "2.12.7",
-  version := "1.0-" + new java.util.Date().getTime,
 
 )
 
 // loads the server project at sbt startup - if client project is wanted switch to "project client"
-// onLoad in Global := (onLoad in Global).value andThen {s: State => "project server" :: s}
+//onLoad in Global := (onLoad in Global).value andThen {s: State => "project server" :: s}
 

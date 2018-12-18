@@ -17,9 +17,11 @@ object  GQLOb {
 }
 
 object TaskQuery extends com.apollographql.scalajs.GraphQLQuery {
+
+
   val operationString =
     """
-      |query{
+      |query task($namesquery : String!){
       |  task(names: $namesquery){
       |    id
       |    name
@@ -30,11 +32,9 @@ object TaskQuery extends com.apollographql.scalajs.GraphQLQuery {
   val operation = com.apollographql.scalajs.gql(operationString)
 
 
-  case class Variables(namesquery: String) {
-  }
+  case class Variables(namesquery: String)
 
-  case class Data(tasks: Option[Seq[Task]]) {
-  }
+  case class Data(tasks: Option[Seq[Task]])
 
   object Data {
     val possibleTypes = scala.collection.Set("Query")

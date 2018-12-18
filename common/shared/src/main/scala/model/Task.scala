@@ -14,4 +14,3 @@ object Task{
   implicit val taskRead = Json.reads[Task]
   implicit val taskWrite = Json.writes[Task]
 }
-

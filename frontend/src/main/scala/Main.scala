@@ -14,7 +14,7 @@ import slinky.core.facade.ReactElement
 object Main  {
 
   val client = ApolloBoostClient(
-    uri = "https://localhost:9000/graphql"
+    uri = "http://localhost:9000/graphql"
   )
 
   @react
@@ -51,7 +51,7 @@ object Main  {
       ApolloProvider(client)(
         div(
           h3("TODO"),
-          //TodoList,
+          TodoList(Seq.empty),
           form(onSubmit := handleSubmit _)(
             input(
               onChange := handleChange _,
@@ -66,12 +66,11 @@ object Main  {
 
   @react
   class TodoList extends StatelessComponent {
-    case class Props()
-
+    case class Props( items :Seq[Task ])
 
 
     def render(): ReactElement = {
-      Query(TaskQuery, TaskQuery.Variables("n1"))  {
+      Query.apply(TaskQuery, TaskQuery.Variables("n1"))  {
         _.data.map { d =>
           div(
             d.toString
@@ -79,15 +78,15 @@ object Main  {
         }.getOrElse(h1("loading!"))
       }
     }
-    /**
+   /*
     override def render() = {
       ul(
         props.items.map { item =>
-          li(key := item.id.toString)(item.name)
+          li(item.toString)
         }
       )
     }
-      **/
+    */
   }
 
 

@@ -46,20 +46,20 @@ class EntriesController (implicit exec: ExecutionContext,
         executeGraphQLQuery(queryAst, operation, variables.getOrElse(Json.obj()))
 
       // can't parse GraphQL query, return error
-      case Failure(error: SyntaxError) ⇒
-        Future.successful(BadRequest(Json.obj("error" → error.getMessage)))
       case Failure(t: Throwable) ⇒
         Future.successful(BadRequest(Json.obj("error" → t.getMessage)))
+      case Failure(error: SyntaxError) ⇒
+        Future.successful(BadRequest(Json.obj("error" → error.getMessage)))
 
     }
   }
 
-  def executeGraphQLQuery(query: Document, op: Option[String], vars: JsObject) =
-    Executor.execute(TLSchema.tlschema, query,taskRepo, operationName = op, variables = vars)
-      .map(Ok(_))
+  def executeGraphQLQuery(query: Document, op: Option[String], vars: JsObject) ={
+    val t = Executor.execute(TLSchema.tlschema, query,taskRepo, operationName = op, variables = vars)
+    t.map(Ok(_))
       .recover {
         case error: QueryAnalysisError ⇒ BadRequest(error.resolveError)
         case error: ErrorWithResolver ⇒ InternalServerError(error.resolveError)
       }
-
+  }
 }
