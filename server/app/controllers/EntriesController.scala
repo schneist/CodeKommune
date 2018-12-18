@@ -48,8 +48,6 @@ class EntriesController (implicit exec: ExecutionContext,
       // can't parse GraphQL query, return error
       case Failure(t: Throwable) ⇒
         Future.successful(BadRequest(Json.obj("error" → t.getMessage)))
-      case Failure(error: SyntaxError) ⇒
-        Future.successful(BadRequest(Json.obj("error" → error.getMessage)))
 
     }
   }

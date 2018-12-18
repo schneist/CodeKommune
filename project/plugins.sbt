@@ -13,7 +13,7 @@ resolvers += "Typesafe repository MAven" at "https://repo.typesafe.com/typesafe/
 // Use the Play sbt plugin for Play projects
 addSbtPlugin ("com.typesafe.play" % "sbt-plugin" % "2.6.20" )
 
-addSbtPlugin("org.scala-js" % "sbt-scalajs" % "0.6.25")
+addSbtPlugin("org.scala-js" % "sbt-scalajs" % "0.6.26")
 
 addSbtPlugin("com.timushev.sbt" % "sbt-updates" % "0.3.4")
 

@@ -18,13 +18,7 @@ lazy val server = (project in file("server")).settings(commonSettings).settings(
   // triggers scalaJSPipeline when using compile or continuous compilation
   compile in Compile := ((compile in Compile) dependsOn scalaJSPipeline).value,
   libraryDependencies ++= Seq(
-    "org.elasticsearch" % "elasticsearch" % "6.2.4",
-    "com.sksamuel.elastic4s" %% "elastic4s-core" % "6.2.9",
-    "com.sksamuel.elastic4s" %% "elastic4s-testkit" % "6.2.9",
     "org.scalatest" %% "scalatest" % "3.0.5",
-    "org.sangria-graphql" %% "sangria" % "1.4.1",
-    "org.sangria-graphql" %% "sangria-relay" % "1.4.1",
-    "org.sangria-graphql" %% "sangria-play-json" % "1.0.4",
     "com.vmunier" %% "scalajs-scripts" % "1.1.2",
   )
 
@@ -60,13 +54,14 @@ lazy val frontend = (project in file("frontend")).settings(commonSettings).setti
     "MVNSearch" at "http://www.mvnsearch.org/maven2/"
   ),
   npmDependencies in Compile ++= Seq(
-    "react" -> "16.6.3",
-    "react-dom" -> "16.6.3",
-    "react-apollo" -> "2.1.0",
-    "apollo-boost" -> "0.1.3",
-    "graphql-tag" -> "2.8.0",
-    "graphql" -> "0.13.2"
+    "react" -> "16.4.0",
+    "react-dom" -> "16.4.0",
+    "react-apollo" -> "2.2.0",
+    "apollo-boost" -> "0.1.22",
+    "graphql-tag" -> "2.10.0",
+    "graphql" -> "14.0.2"
   ),
+
 
   addCompilerPlugin("org.scalameta" % "paradise" % "3.0.0-M11" cross CrossVersion.full),
 
@@ -80,17 +75,17 @@ lazy val common =  crossProject(JSPlatform, JVMPlatform)
   .settings(commonSettings)
   .settings(
     libraryDependencies ++= Seq(
-      "com.typesafe.play" %%% "play-json" % "2.6.9",
-      "org.typelevel" %%% "cats-core" % "1.4.0",
-      "org.typelevel" %%% "cats-free" % "1.4.0",
-      "org.typelevel" %%% "cats-laws" % "1.4.0",
+      "com.typesafe.play" %%% "play-json" % "2.6.12",
+      "org.typelevel" %%% "cats-core" % "1.5.0",
+      "org.typelevel" %%% "cats-free" % "1.5.0",
+      "org.typelevel" %%% "cats-laws" % "1.5.0",
     ),
 
 
   )
   .jsSettings(
     libraryDependencies ++= Seq(
-      "com.apollographql" %%% "apollo-scalajs-react" % "0.4.0",
+      "com.apollographql" %%% "apollo-scalajs-react" % "0.4.3",
     ),
 
     resolvers ++= Seq(

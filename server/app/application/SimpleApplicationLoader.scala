@@ -1,6 +1,5 @@
 package application
 
-import com.sksamuel.elastic4s.http.HttpClient
 import controllers.EntriesController
 import play.api.ApplicationLoader.Context
 import play.api.mvc._
@@ -8,6 +7,7 @@ import play.api.{ApplicationLoader, BuiltInComponentsFromContext, Configuration}
 import play.filters.HttpFiltersComponents
 import repo.InMemoryTaskRepo
 import router.Routes
+
 import scala.concurrent.ExecutionContext
 
 /**
@@ -45,7 +45,6 @@ class Components(context: Context)
 
 class RepositoryComponent(configuration: Configuration)(implicit val ec:ExecutionContext) {
 
-  val client = HttpClient.apply(configuration.get[String]("elasticsearch.connection"))
 
   val taskRepo = new InMemoryTaskRepo
 }
