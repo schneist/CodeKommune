@@ -5,3 +5,6 @@ scala:
 - 2.12.7
 jdk:
 - oraclejdk11
+
+notifications:
+    slack: codekommune:myWS4wQKKENezmXUj1uz7MjS
