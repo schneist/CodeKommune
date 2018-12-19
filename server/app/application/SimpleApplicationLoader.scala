@@ -45,6 +45,5 @@ class Components(context: Context)
 
 class RepositoryComponent(configuration: Configuration)(implicit val ec:ExecutionContext) {
 
-
   val taskRepo = new InMemoryTaskRepo
 }

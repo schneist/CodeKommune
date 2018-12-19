@@ -28,6 +28,12 @@ At the moment it is just a playground for me, to try the following structure:
     
 Yes it is the model for a backend guy to go full stack :)
 
+Plan:
+
+The single point of truth for communication about business object should be the graphql schema.
+It could be visually edited like in:   https://github.com/slothking-online/graphql-editor
+So I need to generate the common case classes out of it. 
+
 Contributing:
 
 Well despite its age it is in a very limited but also fluid state, after all it is my PlayGround .
